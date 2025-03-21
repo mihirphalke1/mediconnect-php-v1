@@ -1,0 +1,554 @@
+/* Enhanced UI for MediConnect Clone based on profile.html */
+
+:root {
+  --primary-gradient: linear-gradient(135deg, #4a6fa5, #5b86e5);
+  --secondary-gradient: linear-gradient(135deg, #6e89a9, #829fd9);
+  --accent-gradient: linear-gradient(135deg, #e94f37, #ff6b58);
+  --light-gradient: linear-gradient(135deg, #f4f7f9, #e6eef3);
+  --dark-color: #2d3748;
+  --success-gradient: linear-gradient(135deg, #48bb78, #38a169);
+  --warning-gradient: linear-gradient(135deg, #f6ad55, #ed8936);
+  --danger-gradient: linear-gradient(135deg, #e53e3e, #c53030);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 15px 30px rgba(0, 0, 0, 0.15);
+  --transition: all 0.3s ease;
+}
+
+/* Dashboard Layout */
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px;
+}
+
+/* Enhanced Cards */
+.card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  padding: 25px;
+  margin-bottom: 25px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 7px;
+  background: var(--primary-gradient);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 600;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Profile Header Section */
+.profile-header-section {
+  background: white;
+  background-image: linear-gradient(to right, #ffffff, #f9fbfd);
+  box-shadow: var(--shadow-md);
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 30px;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-header-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 300px;
+  background: linear-gradient(
+    135deg,
+    rgba(91, 134, 229, 0.05),
+    rgba(54, 209, 220, 0.1)
+  );
+  border-radius: 50%;
+  transform: translate(50%, -50%);
+  z-index: 0;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  position: relative;
+  z-index: 1;
+}
+
+.profile-image-container {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  padding: 5px;
+  background: var(--primary-gradient);
+  box-shadow: var(--shadow-md);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-image-container:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-lg);
+  animation: pulse 2s infinite;
+}
+
+.profile-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
+}
+
+.profile-info h1 {
+  font-size: 28px;
+  margin-bottom: 10px;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Enhanced Form Styling */
+.enhanced-form {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.enhanced-form .form-group {
+  margin-bottom: 20px;
+}
+
+.enhanced-form label {
+  font-weight: 500;
+  display: block;
+  margin-bottom: 8px;
+  color: var(--dark-color);
+}
+
+.enhanced-form input,
+.enhanced-form select,
+.enhanced-form textarea {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  transition: var(--transition);
+  font-size: 16px;
+}
+
+.enhanced-form input:focus,
+.enhanced-form select:focus,
+.enhanced-form textarea:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+  outline: none;
+}
+
+.enhanced-form input[type="submit"] {
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.enhanced-form input[type="submit"]:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Enhanced Cards */
+.enhanced-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: var(--shadow-md);
+  padding: 25px;
+  margin-bottom: 25px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.enhanced-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}
+
+.enhanced-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 7px;
+  background: var(--primary-gradient);
+}
+
+.enhanced-card h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Meta Items */
+.profile-meta {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  background: var(--light-gradient);
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.meta-item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.meta-item i {
+  color: #5b86e5;
+}
+
+/* Timeline for Medical History */
+.timeline {
+  margin-top: 20px;
+}
+
+.timeline-item {
+  position: relative;
+  padding: 15px 0 15px 30px;
+  border-left: 2px solid #e2e8f0;
+  margin-left: 15px;
+}
+
+.timeline-item:before {
+  content: "";
+  position: absolute;
+  left: -10px;
+  top: 15px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid #5b86e5;
+}
+
+.timeline-item:hover:before {
+  background: #5b86e5;
+}
+
+.timeline-date {
+  font-size: 14px;
+  color: #718096;
+  margin-bottom: 5px;
+}
+
+.timeline-title {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: var(--dark-color);
+}
+
+.timeline-desc {
+  font-size: 14px;
+  color: #4a5568;
+  margin-bottom: 8px;
+}
+
+/* Tags */
+.tag {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.tag-routine {
+  background: var(--light-gradient);
+  color: #4a5568;
+}
+
+.tag-chronic {
+  background: var(--warning-gradient);
+  color: white;
+}
+
+.tag-emergency {
+  background: var(--danger-gradient);
+  color: white;
+}
+
+/* Bill Items */
+.bills-list {
+  margin-top: 20px;
+}
+
+.bill-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.bill-item:last-child {
+  border-bottom: none;
+}
+
+.bill-title {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.bill-date {
+  font-size: 14px;
+  color: #718096;
+}
+
+.bill-amount {
+  font-weight: 600;
+  margin-bottom: 5px;
+  text-align: right;
+}
+
+.bill-status {
+  display: block;
+  text-align: center;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-paid {
+  background: var(--success-gradient);
+  color: white;
+}
+
+.status-pending {
+  background: var(--warning-gradient);
+  color: white;
+}
+
+.status-overdue {
+  background: var(--danger-gradient);
+  color: white;
+}
+
+/* Info Grid Layout */
+.info-grid,
+.medical-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.info-item,
+.medical-item {
+  margin-bottom: 10px;
+}
+
+.info-label,
+.medical-label {
+  font-size: 14px;
+  color: #718096;
+  margin-bottom: 5px;
+}
+
+.info-value,
+.medical-value {
+  font-weight: 500;
+}
+
+/* Section with gradient background */
+.gradient-section {
+  background-image: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.gradient-section h1 {
+  font-size: 28px;
+  margin-bottom: 15px;
+  color: var(--dark-color);
+}
+
+/* Doctor Cards */
+.doctor-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.doctor-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin: 0 auto 15px;
+  display: block;
+  object-fit: cover;
+  border: 3px solid white;
+  box-shadow: var(--shadow-md);
+}
+
+/* Status Tags */
+.status-tag {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+}
+
+/* Testimonials */
+.testimonials {
+  margin-top: 20px;
+}
+
+.testimonial-card {
+  background: var(--light-gradient);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.testimonial-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.testimonial-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.testimonial-meta h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.testimonial-meta .meta-info {
+  font-size: 14px;
+  color: #718096;
+}
+
+.testimonial-rating {
+  display: flex;
+  margin: 10px 0;
+}
+
+.star {
+  color: #f6ad55;
+  margin-right: 2px;
+}
+
+.testimonial-text {
+  font-style: italic;
+  color: #4a5568;
+}
+
+/* Animations */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pulse-hover:hover {
+  animation: pulse 2s infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 20px;
+  }
+
+  .profile-meta {
+    justify-content: center;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}
