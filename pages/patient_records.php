@@ -81,24 +81,30 @@ $isSubdirectory = true;
                             <?php foreach ($medical_records as $record): ?>
                                 <div class="record-item">
                                     <div class="record-info">
-                                        <h4><?php echo htmlspecialchars($record['file_name']); ?></h4>
+                                        <h4><?php echo htmlspecialchars($record['file_name'] ?? 'Untitled Document'); ?></h4>
                                         <p>
                                             <i class="fas fa-user"></i>
-                                            Patient: <?php echo htmlspecialchars($record['patient_name']); ?>
+                                            Patient: <?php echo htmlspecialchars($record['patient_name'] ?? 'Unknown Patient'); ?>
                                         </p>
                                         <p>
                                             <i class="fas fa-tag"></i>
-                                            Type: <?php echo htmlspecialchars($record['record_type']); ?>
+                                            Type: <?php echo htmlspecialchars($record['record_type'] ?? 'Unspecified'); ?>
                                         </p>
                                         <p>
                                             <i class="fas fa-calendar-alt"></i>
-                                            Date: <?php echo date('F j, Y', strtotime($record['record_date'])); ?>
+                                            Date: <?php 
+                                                $recordDate = $record['record_date'] ?? null;
+                                                echo $recordDate ? date('F j, Y', strtotime($recordDate)) : 'Not specified';
+                                            ?>
                                         </p>
                                         <p>
                                             <i class="fas fa-clock"></i>
-                                            Uploaded: <?php echo date('F j, Y g:i A', strtotime($record['uploaded_at'])); ?>
+                                            Uploaded: <?php 
+                                                $uploadDate = $record['uploaded_at'] ?? null;
+                                                echo $uploadDate ? date('F j, Y g:i A', strtotime($uploadDate)) : 'Not specified';
+                                            ?>
                                         </p>
-                                        <?php if ($record['notes']): ?>
+                                        <?php if (!empty($record['notes'])): ?>
                                             <p>
                                                 <i class="fas fa-sticky-note"></i>
                                                 Notes: <?php echo htmlspecialchars($record['notes']); ?>
@@ -106,7 +112,7 @@ $isSubdirectory = true;
                                         <?php endif; ?>
                                     </div>
                                     <div class="record-actions">
-                                        <a href="<?php echo htmlspecialchars($record['file_path']); ?>" 
+                                        <a href="<?php echo htmlspecialchars($record['file_path'] ?? '#'); ?>" 
                                            class="btn btn-primary btn-sm" 
                                            target="_blank">
                                             <i class="fas fa-eye"></i> View

@@ -203,12 +203,70 @@
   flex: 1;
   min-width: 200px;
   margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-form .form-group label {
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #4a5568;
+}
+
+.filter-form .form-control {
+  height: 42px;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.filter-form .form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.1);
+  outline: none;
 }
 
 .filter-form .btn {
   margin-bottom: 0;
-  padding: 12px 25px;
+  padding: 0 20px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 120px;
   font-weight: 600;
+  font-size: 14px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.filter-form .btn-primary {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.filter-form .btn-secondary {
+  background: transparent;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+}
+
+.filter-form .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.filter-form .btn-primary:hover {
+  background: #4a6fa5;
+}
+
+.filter-form .btn-secondary:hover {
+  background: rgba(74, 111, 165, 0.05);
 }
 
 /* No Results Message */
@@ -292,9 +350,14 @@
 
   .filter-form {
     flex-direction: column;
+    gap: 15px;
   }
 
   .filter-form .form-group {
+    width: 100%;
+  }
+
+  .filter-form .btn {
     width: 100%;
   }
 
@@ -398,5 +461,53 @@
   .feature-card .btn-primary {
     padding: 7px 18px;
     font-size: 0.85rem;
+  }
+}
+
+/* Search Button Specific Styles */
+#search-doctor-btn {
+  margin-top: 0 !important;
+  height: 42px;
+  padding: 0 25px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  top: 0;
+  vertical-align: bottom;
+}
+
+#search-doctor-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background: #4a6fa5;
+}
+
+#search-doctor-btn i {
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  #search-doctor-btn {
+    width: 100%;
+    margin-top: 15px !important;
+  }
+
+  .filter-form {
+    flex-direction: column;
+  }
+
+  .filter-form .form-group {
+    width: 100%;
   }
 }

@@ -58,10 +58,10 @@ $activePage = 'index.php';
     <title>MediConnect - Healthcare Made Simple</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/styles/styles.css">
+    <link rel="stylesheet" href="assets/styles/minimalist-theme.css">
     <link rel="stylesheet" href="assets/styles/practo-enhanced.css">
     <link rel="stylesheet" href="assets/styles/profile.css">
-    <link rel="stylesheet" href="assets/styles/minimalist-theme.css">
+    <link rel="stylesheet" href="assets/styles/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -222,34 +222,31 @@ $activePage = 'index.php';
             </div>
         </section>
 
-        <section class="card fade-in">
-            <div class="card-header">
-                <h2 class="card-title">Popular Specialties</h2>
-            </div>
-            <div class="doctor-cards">
-                <div class="enhanced-card pulse-hover">
-                    <i class="fas fa-heart" style="font-size: 40px; color: #5b86e5; margin-bottom: 15px"></i>
-                    <h3>Cardiology</h3>
-                    <p>Heart health specialists treating conditions like hypertension, heart disease, and more</p>
-                    <a href="pages/doctors.php?specialty=cardiologist" class="btn btn-primary" style="margin-top: 15px">Find Specialist</a>
+        <section class="card fade-in cta-section">
+            <div class="cta-content">
+                <h2 class="cta-title">Ready to Take Control of Your Health?</h2>
+                <p class="cta-description">Join thousands of satisfied patients who have transformed their healthcare experience with MediConnect. Book your appointment today and experience healthcare the way it should be - simple, efficient, and patient-centered.</p>
+                <div class="cta-buttons">
+                    <a href="pages/doctors.php" class="btn btn-primary btn-lg">
+                        <i class="fas fa-calendar-check"></i>   Book an Appointment
+                    </a>
+                    <a href="register.php" class="btn btn-secondary btn-lg">
+                        <i class="fas fa-user-plus"></i> Create Free Account
+                    </a>
                 </div>
-                <div class="enhanced-card pulse-hover">
-                    <i class="fas fa-brain" style="font-size: 40px; color: #5b86e5; margin-bottom: 15px"></i>
-                    <h3>Neurology</h3>
-                    <p>Experts in treating disorders of the nervous system and brain</p>
-                    <a href="pages/doctors.php?specialty=neurologist" class="btn btn-primary" style="margin-top: 15px">Find Specialist</a>
-                </div>
-                <div class="enhanced-card pulse-hover">
-                    <i class="fas fa-baby" style="font-size: 40px; color: #5b86e5; margin-bottom: 15px"></i>
-                    <h3>Pediatrics</h3>
-                    <p>Healthcare for infants, children, and adolescents</p>
-                    <a href="pages/doctors.php?specialty=pediatrician" class="btn btn-primary" style="margin-top: 15px">Find Specialist</a>
-                </div>
-                <div class="enhanced-card pulse-hover">
-                    <i class="fas fa-bone" style="font-size: 40px; color: #5b86e5; margin-bottom: 15px"></i>
-                    <h3>Orthopedics</h3>
-                    <p>Diagnosis and treatment of conditions affecting the musculoskeletal system</p>
-                    <a href="pages/doctors.php?specialty=orthopedic" class="btn btn-primary" style="margin-top: 15px">Find Specialist</a>
+                <div class="cta-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">10,000+</span>
+                        <span class="stat-label">Happy Patients</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">500+</span>
+                        <span class="stat-label">Expert Doctors</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">Support Available</span>
+                    </div>
                 </div>
             </div>
         </section>
@@ -261,7 +258,6 @@ $activePage = 'index.php';
             <div class="testimonials">
                 <div class="testimonial-card">
                     <div class="testimonial-header">
-                        <img src="https://via.placeholder.com/50" class="testimonial-avatar" alt="Patient Avatar">
                         <div class="testimonial-meta">
                             <h4>Raj Sharma</h4>
                             <div class="meta-info">Mumbai • Cardiology Patient</div>
@@ -279,7 +275,6 @@ $activePage = 'index.php';
 
                 <div class="testimonial-card">
                     <div class="testimonial-header">
-                        <img src="https://via.placeholder.com/50" class="testimonial-avatar" alt="Patient Avatar">
                         <div class="testimonial-meta">
                             <h4>Priya Patel</h4>
                             <div class="meta-info">Delhi • Regular Checkups</div>

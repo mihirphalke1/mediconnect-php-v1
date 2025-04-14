@@ -134,3 +134,12 @@ Created notification successfully
 Successfully updated appointment status to confirmed
 {"time":"2025-04-14 10:28:20","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
 {"time":"2025-04-14 10:31:30","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 11:04:08","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 11:04:18","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 11:04:28","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 11:04:38","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 11:04:48","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 11:10:07","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 11:10:17","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 11:10:27","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 11:10:37","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}

@@ -13,279 +13,280 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $full_name = sanitizeInput($_POST['full_name']);
+    $email = sanitizeInput($_POST['email']);
+    $phone = sanitizeInput($_POST['phone']);
+    $address = sanitizeInput($_POST['address']);
+    
+    // Additional fields for doctors
+    if ($_SESSION['user_type'] == 'doctor') {
+        $specialization = sanitizeInput($_POST['specialization']);
+        $experience = sanitizeInput($_POST['experience']);
+        $consultation_fee = sanitizeInput($_POST['consultation_fee']);
+        $consultation_duration = sanitizeInput($_POST['consultation_duration']);
+        $clinic_name = sanitizeInput($_POST['clinic_name']);
+        $clinic_address = sanitizeInput($_POST['clinic_address']);
+        $clinic_phone = sanitizeInput($_POST['clinic_phone']);
+        $clinic_email = sanitizeInput($_POST['clinic_email']);
+        $working_hours = sanitizeInput($_POST['working_hours']);
+        $languages_spoken = sanitizeInput($_POST['languages_spoken']);
+        $education = sanitizeInput($_POST['education']);
+        $certifications = sanitizeInput($_POST['certifications']);
+        $awards = sanitizeInput($_POST['awards']);
+        $bio = sanitizeInput($_POST['bio']);
+    }
+    
+    try {
+        if ($_SESSION['user_type'] == 'doctor') {
+            $stmt = $conn->prepare("
+                UPDATE doctors 
+                SET full_name = ?, email = ?, phone = ?, address = ?, 
+                    specialization = ?, experience = ?, consultation_fee = ?,
+                    consultation_duration = ?, clinic_name = ?, clinic_address = ?,
+                    clinic_phone = ?, clinic_email = ?, working_hours = ?,
+                    languages_spoken = ?, education = ?, certifications = ?,
+                    awards = ?, bio = ?
+                WHERE id = ?
+            ");
+            $stmt->execute([
+                $full_name, $email, $phone, $address, 
+                $specialization, $experience, $consultation_fee,
+                $consultation_duration, $clinic_name, $clinic_address,
+                $clinic_phone, $clinic_email, $working_hours,
+                $languages_spoken, $education, $certifications,
+                $awards, $bio, $_SESSION['user_id']
+            ]);
+        } else {
+            $stmt = $conn->prepare("
+                UPDATE users 
+                SET full_name = ?, email = ?, phone = ?, address = ?
+                WHERE id = ?
+            ");
+            $stmt->execute([$full_name, $email, $phone, $address, $_SESSION['user_id']]);
+        }
+        
+        $_SESSION['full_name'] = $full_name;
+        setFlashMessage('success', 'Profile updated successfully');
+        header("Location: profile.php");
+        exit();
+    } catch (PDOException $e) {
+        setFlashMessage('error', 'Error updating profile: ' . $e->getMessage());
+    }
+}
+
+// Fetch user data
+if ($_SESSION['user_type'] == 'doctor') {
+    $stmt = $conn->prepare("SELECT * FROM doctors WHERE id = ?");
+} else {
+    $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+}
+$stmt->execute([$_SESSION['user_id']]);
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+// Ensure all fields have default values if null
+$user['full_name'] = $user['full_name'] ?? '';
+$user['email'] = $user['email'] ?? '';
+$user['phone'] = $user['phone'] ?? '';
+$user['address'] = $user['address'] ?? '';
+$user['specialization'] = $user['specialization'] ?? '';
+$user['experience'] = $user['experience'] ?? '';
+$user['consultation_fee'] = $user['consultation_fee'] ?? '';
+$user['consultation_duration'] = $user['consultation_duration'] ?? 30;
+$user['clinic_name'] = $user['clinic_name'] ?? '';
+$user['clinic_address'] = $user['clinic_address'] ?? '';
+$user['clinic_phone'] = $user['clinic_phone'] ?? '';
+$user['clinic_email'] = $user['clinic_email'] ?? '';
+$user['working_hours'] = $user['working_hours'] ?? '';
+$user['languages_spoken'] = $user['languages_spoken'] ?? '';
+$user['education'] = $user['education'] ?? '';
+$user['certifications'] = $user['certifications'] ?? '';
+$user['awards'] = $user['awards'] ?? '';
+$user['bio'] = $user['bio'] ?? '';
+
 // Set active page for navigation
 $activePage = 'profile.php';
 $isSubdirectory = true;
 ?>
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Profile - <?php echo APP_NAME; ?></title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../assets/styles/styles.css" />
-    <link rel="stylesheet" href="../assets/styles/practo-enhanced.css" />
-    <link rel="stylesheet" href="../assets/styles/profile.css" />
-    <link rel="stylesheet" href="../assets/styles/minimalist-theme.css" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    />
-    <style>
-      /* Global Styles */
-      :root {
-        --primary-gradient: linear-gradient(135deg, #4a6fa5, #5b86e5);
-        --secondary-gradient: linear-gradient(135deg, #6e89a9, #829fd9);
-        --accent-gradient: linear-gradient(135deg, #e94f37, #ff6b58);
-        --light-gradient: linear-gradient(135deg, #f4f7f9, #e6eef3);
-        --dark-color: #2d3748;
-        --success-gradient: linear-gradient(135deg, #48bb78, #38a169);
-        --warning-gradient: linear-gradient(135deg, #f6ad55, #ed8936);
-        --danger-gradient: linear-gradient(135deg, #e53e3e, #c53030);
-        --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
-        --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-        --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-        --shadow-hover: 0 15px 30px rgba(0, 0, 0, 0.15);
-        --transition: all 0.3s ease;
-      }
-
-      /* Profile-specific styles */
-      .dashboard-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-      }
-
-      /* Header Section */
-      .profile-header-section {
-        background: white;
-        background-image: linear-gradient(to right, #ffffff, #f9fbfd);
-        box-shadow: var(--shadow-md);
-        border-radius: 16px;
-        padding: 30px;
-        margin-bottom: 30px;
-        position: relative;
-        overflow: hidden;
-      }
-
-      .profile-header-section::before {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 300px;
-        height: 300px;
-        background: linear-gradient(
-          135deg,
-          rgba(91, 134, 229, 0.05),
-          rgba(54, 209, 220, 0.1)
-        );
-        border-radius: 50%;
-        transform: translate(50%, -50%);
-        z-index: 0;
-      }
-
-      .profile-header {
-        position: relative;
-        z-index: 1;
-      }
-
-      .profile-header i {
-        font-size: 2rem;
-        margin-right: 10px;
-        color: #5b86e5;
-      }
-
-      .profile-section {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-      }
-
-      .profile-card {
-        display: flex;
-        flex-direction: column;
-        padding: 20px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        background-color: #fff;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-
-      .profile-card h3 {
-        margin: 0 0 10px;
-        font-size: 1.5rem;
-      }
-
-      .profile-card p {
-        margin: 5px 0;
-        color: #555;
-      }
-
-      .form-group {
-        margin-bottom: 15px;
-      }
-
-      .form-group label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-      }
-
-      .form-group input,
-      .form-group textarea,
-      .form-group select {
-        width: 100%;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-      }
-
-      .btn {
-        display: inline-block;
-        padding: 10px 20px;
-        background-color: #5b86e5;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        text-align: center;
-      }
-
-      .btn:hover {
-        background-color: #4a74c5;
-      }
-    </style>
-  </head>
-  <body>
+<head>
+    <title>My Profile - <?php echo APP_NAME; ?></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/styles/styles.css">
+    <link rel="stylesheet" href="../assets/styles/practo-enhanced.css">
+    <link rel="stylesheet" href="../assets/styles/profile.css">
+    <link rel="stylesheet" href="../assets/styles/doctor.css">
+    <link rel="stylesheet" href="../assets/styles/minimalist-theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
     <?php include '../includes/header.php'; ?>
 
-    <div class="container profile-container">
-      <div class="profile-header">
-        <h1>My Profile</h1>
-        <div class="btn-container">
-          <a href="#" class="btn btn-primary" id="editProfileBtn">
-            <i class="fas fa-edit"></i> Edit Profile
-          </a>
-          <a href="#" class="btn btn-secondary" id="changePasswordBtn">
-            <i class="fas fa-key"></i> Change Password
-          </a>
+    <div class="container">
+        <div class="profile-container fade-in">
+            <div class="profile-header">
+                <div class="profile-image">
+                    <img src="<?php echo $_SESSION['user_type'] == 'doctor' ? '../assets/images/default-doctor.png' : '../assets/images/default-user.png'; ?>" 
+                         alt="Profile Picture" class="profile-picture">
+                    <button class="change-photo-btn">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                </div>
+                <div class="profile-info">
+                    <h1><?php echo htmlspecialchars($user['full_name']); ?></h1>
+                    <p class="user-type">
+                        <i class="fas fa-user-md"></i> 
+                        <?php echo $_SESSION['user_type'] == 'doctor' ? 'Doctor' : 'Patient'; ?>
+                    </p>
+                    <?php if ($_SESSION['user_type'] == 'doctor'): ?>
+                        <p class="specialization">
+                            <i class="fas fa-stethoscope"></i> 
+                            <?php echo htmlspecialchars($user['specialization']); ?>
+                        </p>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <?php echo showFlashMessage(); ?>
+
+            <div class="profile-content">
+                <form action="profile.php" method="POST" class="profile-form">
+                    <div class="form-section">
+                        <h3><i class="fas fa-user"></i> Personal Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="full_name">Full Name</label>
+                                <input type="text" id="full_name" name="full_name" 
+                                       value="<?php echo htmlspecialchars($user['full_name']); ?>" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" 
+                                       value="<?php echo htmlspecialchars($user['email']); ?>" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone</label>
+                                <input type="tel" id="phone" name="phone" 
+                                       value="<?php echo htmlspecialchars($user['phone']); ?>" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="address">Address</label>
+                                <textarea id="address" name="address" required><?php echo htmlspecialchars($user['address']); ?></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php if ($_SESSION['user_type'] == 'doctor'): ?>
+                        <div class="form-section">
+                            <h3><i class="fas fa-graduation-cap"></i> Professional Information</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="specialization">Specialization</label>
+                                    <input type="text" id="specialization" name="specialization" 
+                                           value="<?php echo htmlspecialchars($user['specialization']); ?>" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="experience">Years of Experience</label>
+                                    <input type="number" id="experience" name="experience" 
+                                           value="<?php echo htmlspecialchars($user['experience']); ?>" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="consultation_fee">Consultation Fee ($)</label>
+                                    <input type="number" id="consultation_fee" name="consultation_fee" 
+                                           value="<?php echo htmlspecialchars($user['consultation_fee']); ?>" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="consultation_duration">Consultation Duration (minutes)</label>
+                                    <input type="number" id="consultation_duration" name="consultation_duration" 
+                                           value="<?php echo htmlspecialchars($user['consultation_duration']); ?>" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3><i class="fas fa-hospital"></i> Clinic Information</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="clinic_name">Clinic Name</label>
+                                    <input type="text" id="clinic_name" name="clinic_name" 
+                                           value="<?php echo htmlspecialchars($user['clinic_name']); ?>" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="clinic_address">Clinic Address</label>
+                                    <textarea id="clinic_address" name="clinic_address" required><?php echo htmlspecialchars($user['clinic_address']); ?></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="clinic_phone">Clinic Phone</label>
+                                    <input type="tel" id="clinic_phone" name="clinic_phone" 
+                                           value="<?php echo htmlspecialchars($user['clinic_phone']); ?>" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="clinic_email">Clinic Email</label>
+                                    <input type="email" id="clinic_email" name="clinic_email" 
+                                           value="<?php echo htmlspecialchars($user['clinic_email']); ?>" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3><i class="fas fa-clock"></i> Working Hours</h3>
+                            <div class="form-group">
+                                <label for="working_hours">Working Hours (e.g., Mon-Fri: 9AM-5PM, Sat: 9AM-1PM)</label>
+                                <textarea id="working_hours" name="working_hours" required><?php echo htmlspecialchars($user['working_hours']); ?></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3><i class="fas fa-graduation-cap"></i> Education & Qualifications</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="education">Education (One per line)</label>
+                                    <textarea id="education" name="education" rows="3"><?php echo htmlspecialchars($user['education']); ?></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="certifications">Certifications (One per line)</label>
+                                    <textarea id="certifications" name="certifications" rows="3"><?php echo htmlspecialchars($user['certifications']); ?></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="awards">Awards & Achievements (One per line)</label>
+                                    <textarea id="awards" name="awards" rows="3"><?php echo htmlspecialchars($user['awards']); ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3><i class="fas fa-language"></i> Languages & Bio</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="languages_spoken">Languages Spoken (comma separated)</label>
+                                    <input type="text" id="languages_spoken" name="languages_spoken" 
+                                           value="<?php echo htmlspecialchars($user['languages_spoken']); ?>" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="bio">Professional Bio</label>
+                                    <textarea id="bio" name="bio" rows="4"><?php echo htmlspecialchars($user['bio']); ?></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                        <a href="change_password.php" class="btn btn-secondary">
+                            <i class="fas fa-key"></i> Change Password
+                        </a>
+                    </div>
+                </form>
+            </div>
         </div>
-      </div>
-
-      <div class="container dashboard-container">
-        <section class="profile-header-section fade-in">
-          <div class="profile-header">
-            <div class="profile-info">
-              <h1><i class="fas fa-user"></i> Profile</h1>
-              <p class="lead">Manage your profile information and settings.</p>
-            </div>
-          </div>
-        </section>
-
-        <section class="profile-section fade-in">
-          <div class="card">
-            <div class="card-header">
-              <h2 class="card-title">Profile Information</h2>
-            </div>
-            <div class="profile-card">
-              <form id="profileForm" onsubmit="return validateProfileForm()">
-                <div class="form-group">
-                  <label for="name"><i class="fas fa-user"></i> Name:</label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value="Mihir Phalke"
-                    required
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="email"
-                    ><i class="fas fa-envelope"></i> Email:</label
-                  >
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value="mihir@example.com"
-                    required
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="phone"><i class="fas fa-phone"></i> Phone:</label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    value="+1 (555) 123-4567"
-                    required
-                  />
-                </div>
-                <div class="form-group">
-                  <label for="address"
-                    ><i class="fas fa-map-marker-alt"></i> Address:</label
-                  >
-                  <textarea id="address" name="address" rows="3" required>
-123 Main St, Mumbai, India</textarea
-                  >
-                </div>
-                <input type="submit" value="Update Profile" class="btn" />
-              </form>
-            </div>
-          </div>
-        </section>
-      </div>
     </div>
 
-    <footer>
-      <div class="container">
-        <div class="footer-content">
-          <div class="footer-section">
-            <h4>Quick Links</h4>
-            <a href="doctors.html">Find Doctors</a>
-            <a href="dashboard.html">Dashboard</a>
-            <a href="feedback.html">Feedback</a>
-          </div>
-          <div class="footer-section">
-            <h4>Legal</h4>
-            <a href="terms.html">Terms of Service</a>
-            <a href="privacy.html">Privacy Policy</a>
-          </div>
-          <div class="footer-section">
-            <h4>Contact</h4>
-            <p><i class="fas fa-envelope"></i> support@mediconnect.com</p>
-            <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <p>&copy; 2024 MediConnect. All rights reserved.</p>
-        </div>
-      </div>
-    </footer>
-
-    <script>
-      function validateProfileForm() {
-        const form = document.getElementById("profileForm");
-        const name = form.name.value.trim();
-        const email = form.email.value.trim();
-        const phone = form.phone.value.trim();
-        const address = form.address.value.trim();
-
-        if (!name || !email || !phone || !address) {
-          alert("Please fill in all fields.");
-          return false;
-        }
-
-        alert("Profile updated successfully!");
-        return true;
-      }
-    </script>
-    
     <?php include '../includes/footer.php'; ?>
-  </body>
+</body>
 </html>

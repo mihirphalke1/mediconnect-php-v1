@@ -496,11 +496,29 @@ footer {
   box-shadow: none;
 }
 
-.btn-container {
+.button-container {
+  margin-top: auto;
+  padding-top: 15px;
   display: flex;
-  gap: 15px;
   justify-content: center;
-  margin: 20px 0;
+  width: 100%;
+}
+
+.button-container .btn {
+  width: 85%;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.button-container .btn i {
+  margin-right: 8px;
+}
+
+.button-container .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Hero Section */
@@ -600,6 +618,9 @@ footer {
   transition: var(--transition);
   border: 1px solid var(--border-color);
   position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .enhanced-card:hover {
@@ -620,6 +641,26 @@ footer {
   -webkit-text-fill-color: transparent;
   background-clip: text;
   color: transparent;
+}
+
+.button-container {
+  margin-top: auto;
+  padding-top: 15px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.button-container .btn {
+  min-width: 80%;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.button-container .btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* Section with gradient background */
@@ -1041,4 +1082,222 @@ textarea:focus {
 
 .notification-action {
   margin-left: 15px;
+}
+
+/* Doctor Cards */
+.doctor-cards {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
+  gap: 30px !important;
+  margin: 30px 0 !important;
+  padding: 20px !important;
+}
+
+.doctor-cards .enhanced-card {
+  background: white !important;
+  border-radius: 16px !important;
+  padding: 30px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+  border: 1px solid rgba(0, 0, 0, 0.05) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  transition: all 0.3s ease !important;
+}
+
+.doctor-cards .enhanced-card:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12) !important;
+}
+
+.doctor-cards .enhanced-card i {
+  font-size: 50px !important;
+  color: #2c6496 !important;
+  margin-bottom: 25px !important;
+}
+
+.doctor-cards .enhanced-card h3 {
+  font-size: 24px !important;
+  font-weight: 600 !important;
+  color: #333 !important;
+  margin-bottom: 15px !important;
+}
+
+.doctor-cards .enhanced-card p {
+  color: #666 !important;
+  line-height: 1.7 !important;
+  margin-bottom: 30px !important;
+  font-size: 15px !important;
+}
+
+.doctor-cards .button-container {
+  width: 100% !important;
+  margin-top: auto !important;
+  padding-top: 20px !important;
+}
+
+.doctor-cards .button-container .btn {
+  width: 90% !important;
+  padding: 14px 25px !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  border-radius: 10px !important;
+  background: linear-gradient(135deg, #2c6496, #3a7ca5) !important;
+  color: white !important;
+  border: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  transition: all 0.3s ease !important;
+}
+
+.doctor-cards .button-container .btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+  background: linear-gradient(135deg, #3a7ca5, #2c6496) !important;
+}
+
+.doctor-cards .button-container .btn i {
+  font-size: 18px !important;
+}
+
+/* CTA Section Styles */
+.cta-section {
+  background: linear-gradient(135deg, #5b86e5 0%, #36d1dc 100%);
+  color: white;
+  text-align: center;
+  padding: 3rem 2rem;
+  margin: 2rem 0;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.cta-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.cta-title {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cta-description {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  opacity: 0.9;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.cta-buttons .btn {
+  padding: 1rem 2.5rem;
+  font-size: 1.1rem;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  min-width: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.cta-buttons .btn-primary {
+  background: white;
+  color: #5b86e5;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.cta-buttons .btn-secondary {
+  background: transparent;
+  border: 2px solid white;
+  color: white;
+}
+
+.cta-buttons .btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.cta-buttons .btn-primary:hover {
+  background: #f8f9fa;
+}
+
+.cta-buttons .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.cta-stats {
+  display: flex;
+  justify-content: center;
+  gap: 4rem;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.stat-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -2rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stat-label {
+  font-size: 1rem;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .cta-title {
+    font-size: 2rem;
+  }
+
+  .cta-buttons {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .cta-stats {
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+
+  .stat-item:not(:last-child)::after {
+    display: none;
+  }
 }

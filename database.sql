@@ -26,7 +26,21 @@ CREATE TABLE doctors (
     experience INT,
     phone VARCHAR(20),
     address TEXT,
+    clinic_address TEXT,
     profile_image VARCHAR(255),
+    qualifications TEXT,
+    bio TEXT,
+    consultation_fee DECIMAL(10, 2),
+    working_hours TEXT,
+    languages_spoken VARCHAR(255),
+    education TEXT,
+    certifications TEXT,
+    awards TEXT,
+    clinic_name VARCHAR(255),
+    clinic_phone VARCHAR(20),
+    clinic_email VARCHAR(100),
+    consultation_duration INT DEFAULT 30, -- in minutes
+    is_available BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
