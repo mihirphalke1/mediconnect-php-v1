@@ -20,6 +20,7 @@ $doctors = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Set active page for navigation
 $activePage = 'book_appointment.php';
+$isSubdirectory = true;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,6 +30,7 @@ $activePage = 'book_appointment.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/styles/styles.css">
     <link rel="stylesheet" href="../assets/styles/practo-enhanced.css">
+    <link rel="stylesheet" href="../assets/styles/minimalist-theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>

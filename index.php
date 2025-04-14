@@ -1,19 +1,25 @@
 <?php
-session_start();
-require_once 'config/database.php';
+/**
+ * Homepage - MediConnect
+ * Main landing page for the website
+ */
+
+// Include configuration
+require_once 'includes/config.php';
 
 $error = '';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+// Process login form if submitted
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['login'])) {
+    $email = sanitizeInput($_POST['email']);
     $password = $_POST['password'];
-    $user_type = $_POST['user_type'];
+    $userType = sanitizeInput($_POST['user_type']);
     
     if (empty($email) || empty($password)) {
         $error = "Please fill in all fields";
     } else {
         try {
-            if ($user_type == 'user') {
+            if ($userType == 'user') {
                 $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
             } else {
                 $stmt = $conn->prepare("SELECT * FROM doctors WHERE email = ?");
@@ -24,11 +30,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             if ($user && password_verify($password, $user['password'])) {
                 $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_type'] = $user_type;
+                $_SESSION['user_type'] = $userType;
                 $_SESSION['full_name'] = $user['full_name'];
                 
                 // Redirect based on user type
-                if ($user_type == 'user') {
+                if ($userType == 'user') {
                     header("Location: dashboard.php");
                 } else {
                     header("Location: doctor_dashboard.php");
@@ -38,10 +44,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $error = "Invalid email or password";
             }
         } catch(PDOException $e) {
-            $error = "Error: " . $e->getMessage();
+            $error = "Database error: " . $e->getMessage();
         }
     }
 }
+
+// Set active page for navigation
+$activePage = 'index.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -52,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="assets/styles/styles.css">
     <link rel="stylesheet" href="assets/styles/practo-enhanced.css">
     <link rel="stylesheet" href="assets/styles/profile.css">
+    <link rel="stylesheet" href="assets/styles/minimalist-theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -115,36 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <a href="index.php" class="logo">
-                    <i class="fas fa-heartbeat"></i>
-                    <h1>MediConnect</h1>
-                </a>
-                <nav>
-                    <a href="index.php" class="active">Home</a>
-                    <a href="pages/doctors.php">Find Doctors</a>
-                    <?php if(isset($_SESSION['user_id'])): ?>
-                        <?php if($_SESSION['user_type'] == 'user'): ?>
-                            <a href="dashboard.php">My Dashboard</a>
-                            <a href="pages/book_appointment.php">Book Appointment</a>
-                            <a href="medical_records.php">Medical Records</a>
-                        <?php else: ?>
-                            <a href="doctor_dashboard.php">Doctor Dashboard</a>
-                            <a href="pages/appointments.php">My Appointments</a>
-                        <?php endif; ?>
-                        <a href="pages/profile.php">Profile</a>
-                        <a href="pages/feedback.php">Feedback</a>
-                        <a href="logout.php" class="btn btn-secondary">Logout</a>
-                    <?php else: ?>
-                        <a href="#" class="btn btn-primary login-trigger">Login</a>
-                        <a href="register.php" class="btn btn-secondary">Register</a>
-                    <?php endif; ?>
-                </nav>
-            </div>
-        </div>
-    </header>
+    <?php include 'includes/header.php'; ?>
 
     <div class="container dashboard-container">
         <section class="profile-header-section fade-in">
@@ -317,37 +298,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </section>
     </div>
 
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <a href="pages/doctors.php">Find Doctors</a>
-                    <?php if(isset($_SESSION['user_id'])): ?>
-                        <?php if($_SESSION['user_type'] == 'user'): ?>
-                            <a href="dashboard.php">Dashboard</a>
-                        <?php else: ?>
-                            <a href="doctor_dashboard.php">Dashboard</a>
-                        <?php endif; ?>
-                    <?php endif; ?>
-                    <a href="pages/feedback.php">Feedback</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Legal</h4>
-                    <a href="pages/terms.php">Terms of Service</a>
-                    <a href="pages/privacy.php">Privacy Policy</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact</h4>
-                    <p><i class="fas fa-envelope"></i> support@mediconnect.com</p>
-                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 MediConnect. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <?php include 'includes/footer.php'; ?>
 
     <!-- Login Modal -->
     <div id="loginModal" class="modal">
@@ -358,22 +309,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="alert alert-danger"><?php echo $error; ?></div>
             <?php endif; ?>
             <form method="POST" action="" class="enhanced-form">
+                <input type="hidden" name="login" value="1">
                 <div class="form-group">
                     <label for="user_type">Account Type:</label>
-                    <select id="user_type" name="user_type" required>
+                    <select id="user_type" name="user_type" class="form-control" required>
                         <option value="user">Patient</option>
                         <option value="doctor">Doctor</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
+                    <input type="password" id="password" name="password" class="form-control" required>
                 </div>
-                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="submit" class="btn btn-primary btn-block">Login</button>
                 <p class="form-footer">
                     Don't have an account? <a href="register.php">Register here</a>
                 </p>

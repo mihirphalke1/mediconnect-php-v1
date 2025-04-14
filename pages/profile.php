@@ -1,12 +1,32 @@
+<?php
+/**
+ * Profile Page
+ * Allows users to view and edit their profile information
+ */
+
+// Include configuration
+require_once '../includes/config.php';
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login.php");
+    exit();
+}
+
+// Set active page for navigation
+$activePage = 'profile.php';
+$isSubdirectory = true;
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Profile - MediConnect Clone</title>
+    <title>Profile - <?php echo APP_NAME; ?></title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../assets/styles/styles.css" />
     <link rel="stylesheet" href="../assets/styles/practo-enhanced.css" />
     <link rel="stylesheet" href="../assets/styles/profile.css" />
+    <link rel="stylesheet" href="../assets/styles/minimalist-theme.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
       rel="stylesheet"
@@ -142,31 +162,7 @@
     </style>
   </head>
   <body>
-    <header>
-      <div class="container">
-        <div class="header-content">
-          <a href="../index.php" class="logo">
-            <i class="fas fa-heartbeat"></i>
-            <h1>MediConnect</h1>
-          </a>
-          <nav>
-            <a href="../index.php">Home</a>
-            <?php if($_SESSION['user_type'] == 'user'): ?>
-              <a href="../dashboard.php">My Dashboard</a>
-              <a href="doctors.php">Find Doctors</a>
-              <a href="book_appointment.php">Book Appointment</a>
-              <a href="../medical_records.php">Medical Records</a>
-            <?php else: ?>
-              <a href="../doctor_dashboard.php">Doctor Dashboard</a>
-              <a href="appointments.php">My Appointments</a>
-            <?php endif; ?>
-            <a href="profile.php" class="active">Profile</a>
-            <a href="feedback.php">Feedback</a>
-            <a href="../logout.php" class="btn btn-secondary">Logout</a>
-          </nav>
-        </div>
-      </div>
-    </header>
+    <?php include '../includes/header.php'; ?>
 
     <div class="container profile-container">
       <div class="profile-header">
@@ -178,68 +174,72 @@
           <a href="#" class="btn btn-secondary" id="changePasswordBtn">
             <i class="fas fa-key"></i> Change Password
           </a>
-    <div class="container dashboard-container">
-      <section class="profile-header-section fade-in">
-        <div class="profile-header">
-          <div class="profile-info">
-            <h1><i class="fas fa-user"></i> Profile</h1>
-            <p class="lead">Manage your profile information and settings.</p>
-          </div>
         </div>
-      </section>
+      </div>
 
-      <section class="profile-section fade-in">
-        <div class="card">
-          <div class="card-header">
-            <h2 class="card-title">Profile Information</h2>
+      <div class="container dashboard-container">
+        <section class="profile-header-section fade-in">
+          <div class="profile-header">
+            <div class="profile-info">
+              <h1><i class="fas fa-user"></i> Profile</h1>
+              <p class="lead">Manage your profile information and settings.</p>
+            </div>
           </div>
-          <div class="profile-card">
-            <form id="profileForm" onsubmit="return validateProfileForm()">
-              <div class="form-group">
-                <label for="name"><i class="fas fa-user"></i> Name:</label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value="Mihir Phalke"
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label for="email"
-                  ><i class="fas fa-envelope"></i> Email:</label
-                >
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value="mihir@example.com"
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label for="phone"><i class="fas fa-phone"></i> Phone:</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value="+1 (555) 123-4567"
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label for="address"
-                  ><i class="fas fa-map-marker-alt"></i> Address:</label
-                >
-                <textarea id="address" name="address" rows="3" required>
+        </section>
+
+        <section class="profile-section fade-in">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Profile Information</h2>
+            </div>
+            <div class="profile-card">
+              <form id="profileForm" onsubmit="return validateProfileForm()">
+                <div class="form-group">
+                  <label for="name"><i class="fas fa-user"></i> Name:</label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value="Mihir Phalke"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="email"
+                    ><i class="fas fa-envelope"></i> Email:</label
+                  >
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value="mihir@example.com"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="phone"><i class="fas fa-phone"></i> Phone:</label>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    value="+1 (555) 123-4567"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="address"
+                    ><i class="fas fa-map-marker-alt"></i> Address:</label
+                  >
+                  <textarea id="address" name="address" rows="3" required>
 123 Main St, Mumbai, India</textarea
-                >
-              </div>
-              <input type="submit" value="Update Profile" class="btn" />
-            </form>
+                  >
+                </div>
+                <input type="submit" value="Update Profile" class="btn" />
+              </form>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </div>
     </div>
 
     <footer>
@@ -285,5 +285,7 @@
         return true;
       }
     </script>
+    
+    <?php include '../includes/footer.php'; ?>
   </body>
 </html>

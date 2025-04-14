@@ -19,14 +19,25 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // Get and sanitize form data
 $doctorId = sanitizeInput($_POST['doctor_id']);
-$appointmentDate = sanitizeInput($_POST['appointment_date']);
-$appointmentTime = sanitizeInput($_POST['appointment_time']);
+$date = sanitizeInput($_POST['appointment_date']);
+$time = sanitizeInput($_POST['appointment_time']);
 $reason = sanitizeInput($_POST['reason']);
 
-// Validate form data
-if (empty($doctorId) || empty($appointmentDate) || empty($appointmentTime) || empty($reason)) {
-    setFlashMessage('error', 'Please fill in all required fields');
-    header('Location: pages/book_appointment.php' . (!empty($doctorId) ? "?doctor_id=$doctorId" : ''));
+// Validate input
+if (empty($doctorId) || empty($date) || empty($time) || empty($reason)) {
+    $_SESSION['flash_message'] = "Please fill in all required fields.";
+    $_SESSION['flash_type'] = "error";
+    header('Location: pages/book_appointment.php');
+    exit();
+}
+
+// Validate date format (must be in the future)
+$appointmentDate = new DateTime($date);
+$today = new DateTime(date('Y-m-d'));
+if ($appointmentDate < $today) {
+    $_SESSION['flash_message'] = "Please select a future date for your appointment.";
+    $_SESSION['flash_type'] = "error";
+    header('Location: pages/book_appointment.php?doctor_id=' . $doctorId);
     exit();
 }
 
@@ -39,7 +50,7 @@ try {
         SELECT COUNT(*) FROM appointments 
         WHERE doctor_id = ? AND appointment_date = ? AND appointment_time = ? AND status != 'cancelled'
     ");
-    $stmt->execute([$doctorId, $appointmentDate, $appointmentTime]);
+    $stmt->execute([$doctorId, $date, $time]);
     $count = $stmt->fetchColumn();
     
     if ($count > 0) {
@@ -55,7 +66,7 @@ try {
         INSERT INTO appointments (user_id, doctor_id, appointment_date, appointment_time, notes, status)
         VALUES (?, ?, ?, ?, ?, 'pending')
     ");
-    $stmt->execute([$_SESSION['user_id'], $doctorId, $appointmentDate, $appointmentTime, $reason]);
+    $stmt->execute([$_SESSION['user_id'], $doctorId, $date, $time, $reason]);
     $appointmentId = $conn->lastInsertId();
     
     // Get user's full name
@@ -78,8 +89,8 @@ try {
     
     $title = 'New Appointment Request';
     $message = $userName . ' has requested an appointment on ' . 
-               date('F j, Y', strtotime($appointmentDate)) . ' at ' . 
-               date('g:i A', strtotime($appointmentTime));
+               date('F j, Y', strtotime($date)) . ' at ' . 
+               date('g:i A', strtotime($time));
     
     $notificationStmt->execute([
         $doctorId,
@@ -94,8 +105,8 @@ try {
     
     // Set success message
     setFlashMessage('success', "Your appointment with Dr. $doctorName has been scheduled for " . 
-                   date('F j, Y', strtotime($appointmentDate)) . " at " . 
-                   date('g:i A', strtotime($appointmentTime)) . ". Please wait for confirmation.");
+                   date('F j, Y', strtotime($date)) . " at " . 
+                   date('g:i A', strtotime($time)) . ". Please wait for confirmation.");
     
     // Redirect to dashboard
     header('Location: dashboard.php');

@@ -1,7 +1,7 @@
 <?php
 /**
- * Doctor Upload Medical Record Page
- * Allows doctors to upload medical records for patients
+ * Doctor Prescription Upload Page
+ * Allows doctors to upload prescriptions for patients
  */
 
 // Include configuration
@@ -14,7 +14,7 @@ requireRole('doctor');
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Get form data
     $patientId = sanitizeInput($_POST['patient_id']);
-    $recordTitle = sanitizeInput($_POST['record_title']);
+    $prescriptionTitle = sanitizeInput($_POST['prescription_title']);
     
     // Validate form
     $errors = [];
@@ -23,16 +23,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $errors[] = "Patient is required";
     }
     
-    if (empty($recordTitle)) {
-        $errors[] = "Record title is required";
+    if (empty($prescriptionTitle)) {
+        $errors[] = "Prescription title is required";
     }
     
     // Check if file was uploaded properly
-    if (!isset($_FILES['record_file']) || $_FILES['record_file']['error'] != 0) {
-        $errors[] = "File upload error: " . ($_FILES['record_file']['error'] ?? 'Unknown error');
+    if (!isset($_FILES['prescription_file']) || $_FILES['prescription_file']['error'] != 0) {
+        $errors[] = "File upload error: " . ($_FILES['prescription_file']['error'] ?? 'Unknown error');
     } else {
         // Validate file
-        $file = $_FILES['record_file'];
+        $file = $_FILES['prescription_file'];
         $fileName = sanitizeInput($file['name']);
         $fileType = $file['type'];
         $fileSize = $file['size'];
@@ -43,12 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $errors[] = "File size must be less than 10MB";
         }
         
-        // Check file type
-        $allowedExtensions = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'];
+        // Check file type - only allow PDF
         $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
         
-        if (!in_array($fileExtension, $allowedExtensions)) {
-            $errors[] = "Only PDF, DOC, DOCX, JPG, JPEG and PNG files are allowed";
+        if ($fileExtension !== 'pdf') {
+            $errors[] = "Only PDF files are allowed for prescriptions";
         }
     }
     
@@ -60,20 +59,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             
             // Create unique filename
             $newFileName = time() . '_' . $fileName;
-            $uploadPath = MEDICAL_RECORDS_DIR . $newFileName;
+            $uploadPath = PRESCRIPTIONS_DIR . $newFileName;
             
             // Move uploaded file
             if (move_uploaded_file($fileTmp, $uploadPath)) {
-                // Insert record into database
+                // Insert prescription into database
                 $stmt = $conn->prepare("
-                    INSERT INTO medical_records (user_id, doctor_id, file_name, file_path, file_type, file_size) 
+                    INSERT INTO prescriptions (user_id, doctor_id, title, file_path, file_type, file_size) 
                     VALUES (?, ?, ?, ?, ?, ?)
                 ");
                 
                 $stmt->execute([
                     $patientId,
                     $_SESSION['user_id'],
-                    $recordTitle,
+                    $prescriptionTitle,
                     $uploadPath,
                     $fileType,
                     $fileSize
@@ -91,14 +90,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $doctor = $doctorStmt->fetch(PDO::FETCH_ASSOC);
                 $doctorName = $doctor ? $doctor['full_name'] : 'Your doctor';
                 
-                $notificationTitle = "New Medical Record";
-                $notificationMessage = "Dr. $doctorName has uploaded a new medical record: $recordTitle";
+                $notificationTitle = "New Prescription";
+                $notificationMessage = "Dr. $doctorName has uploaded a new prescription: $prescriptionTitle";
                 
                 $notificationStmt->execute([
                     $patientId,
                     $notificationTitle,
                     $notificationMessage,
-                    'medical_record',
+                    'prescription',
                     $conn->lastInsertId()
                 ]);
                 
@@ -106,8 +105,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $conn->commit();
                 
                 // Set success message
-                setFlashMessage('success', "Medical record uploaded successfully");
-                header("Location: doctor_upload.php");
+                setFlashMessage('success', "Prescription uploaded successfully");
+                header("Location: doctor_dashboard.php");
                 exit();
             } else {
                 // Rollback transaction
@@ -146,12 +145,12 @@ if (empty($patients)) {
 }
 
 // Set active page for navigation
-$activePage = 'doctor_upload.php';
+$activePage = 'doctor_prescription.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Upload Medical Records - <?php echo APP_NAME; ?></title>
+    <title>Upload Prescription - <?php echo APP_NAME; ?></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/styles/styles.css">
@@ -265,8 +264,8 @@ $activePage = 'doctor_upload.php';
     <div class="container">
         <div class="upload-container fade-in">
             <div class="form-header">
-                <h2><i class="fas fa-file-medical"></i> Upload Medical Record</h2>
-                <p>Upload a medical record for your patient</p>
+                <h2><i class="fas fa-prescription"></i> Upload Prescription</h2>
+                <p>Create and upload a prescription for your patient</p>
             </div>
             
             <?php echo showFlashMessage(); ?>
@@ -281,7 +280,7 @@ $activePage = 'doctor_upload.php';
                 </div>
             <?php endif; ?>
             
-            <form action="doctor_upload.php" method="POST" enctype="multipart/form-data">
+            <form action="doctor_prescription.php" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="patient">Select Patient:</label>
                     <select id="patient" name="patient_id" class="form-control" required>
@@ -298,27 +297,27 @@ $activePage = 'doctor_upload.php';
                 </div>
                 
                 <div class="form-group">
-                    <label for="record_title">Record Title:</label>
-                    <input type="text" id="record_title" name="record_title" class="form-control" 
-                           placeholder="E.g., Blood Test Results, X-Ray Report, Prescription" 
-                           value="<?php echo isset($_POST['record_title']) ? htmlspecialchars($_POST['record_title']) : ''; ?>" 
+                    <label for="prescription_title">Prescription Title:</label>
+                    <input type="text" id="prescription_title" name="prescription_title" class="form-control" 
+                           placeholder="E.g., Antibiotics, Pain Management, Monthly Medication" 
+                           value="<?php echo isset($_POST['prescription_title']) ? htmlspecialchars($_POST['prescription_title']) : ''; ?>" 
                            required>
                 </div>
                 
                 <div class="form-group">
-                    <label>Upload File:</label>
-                    <label for="record_file" class="file-input-container">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                        <p>Click or drag file to upload</p>
-                        <span class="hint">Supported formats: PDF, DOC, DOCX, JPG, JPEG, PNG (Max 10MB)</span>
-                        <input type="file" id="record_file" name="record_file" class="file-input" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required>
+                    <label>Upload Prescription PDF:</label>
+                    <label for="prescription_file" class="file-input-container">
+                        <i class="fas fa-file-prescription"></i>
+                        <p>Click or drag PDF file to upload</p>
+                        <span class="hint">Only PDF format is supported (Max 10MB)</span>
+                        <input type="file" id="prescription_file" name="prescription_file" class="file-input" accept=".pdf" required>
                         <div id="file-name"></div>
                     </label>
                 </div>
                 
                 <div class="btn-container">
                     <button type="submit" class="btn btn-primary btn-upload">
-                        <i class="fas fa-upload"></i> Upload Record
+                        <i class="fas fa-upload"></i> Upload Prescription
                     </button>
                 </div>
             </form>
@@ -329,7 +328,7 @@ $activePage = 'doctor_upload.php';
     
     <script>
         // Display selected filename
-        document.getElementById('record_file').addEventListener('change', function(e) {
+        document.getElementById('prescription_file').addEventListener('change', function(e) {
             const fileName = e.target.files[0] ? e.target.files[0].name : '';
             document.getElementById('file-name').textContent = fileName;
         });

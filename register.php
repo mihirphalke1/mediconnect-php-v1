@@ -33,16 +33,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 // Handle profile image upload
                 $profile_image = '';
                 if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] == 0) {
-                    $allowed = ['jpg', 'jpeg', 'png', 'gif'];
+                    $allowed = ['jpg', 'jpeg', 'png'];
                     $filename = $_FILES['profile_image']['name'];
-                    $filetype = pathinfo($filename, PATHINFO_EXTENSION);
+                    $filetype = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+                    $filesize = $_FILES['profile_image']['size'];
                     
-                    if (in_array(strtolower($filetype), $allowed)) {
+                    // Validate file type
+                    if (!in_array($filetype, $allowed)) {
+                        $error = "Only JPG, JPEG, and PNG files are allowed";
+                    } 
+                    // Validate file size (max 5MB)
+                    elseif ($filesize > 5000000) {
+                        $error = "File size must be less than 5MB";
+                    } else {
                         $newname = uniqid() . '.' . $filetype;
-                        $upload_path = 'uploads/profiles/' . $newname;
+                        // Store in different directories based on user type
+                        $upload_path = ($user_type == 'doctor') 
+                            ? 'uploads/doctor_profiles/' . $newname 
+                            : 'uploads/profiles/' . $newname;
                         
                         if (move_uploaded_file($_FILES['profile_image']['tmp_name'], $upload_path)) {
                             $profile_image = $upload_path;
+                        } else {
+                            $error = "Failed to upload image";
                         }
                     }
                 }
@@ -184,7 +197,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <div class="form-group">
                         <label for="profile_image">Profile Image</label>
                         <input type="file" id="profile_image" name="profile_image" accept="image/*">
-                        <small>Supported formats: JPG, JPEG, PNG, GIF</small>
+                        <small>Supported formats: JPG, JPEG, PNG</small>
                     </div>
                     
                     <button type="submit" class="btn btn-primary btn-block">Register</button>

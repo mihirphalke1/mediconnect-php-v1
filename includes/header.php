@@ -17,6 +17,7 @@ function isActive($page, $activePage) {
     return ($page === $activePage) ? 'class="active"' : '';
 }
 ?>
+<link rel="stylesheet" href="<?php echo $baseUrl; ?>assets/styles/minimalist-theme.css">
 <header>
     <div class="container">
         <div class="header-content">
@@ -41,6 +42,7 @@ function isActive($page, $activePage) {
                         <a href="<?php echo $baseUrl; ?>doctor_dashboard.php" <?php echo isActive('doctor_dashboard.php', $activePage); ?>>Dashboard</a>
                         <a href="<?php echo $baseUrl; ?>pages/appointments.php" <?php echo isActive('appointments.php', $activePage); ?>>My Appointments</a>
                         <a href="<?php echo $baseUrl; ?>doctor_upload.php" <?php echo isActive('doctor_upload.php', $activePage); ?>>Upload Records</a>
+                        <a href="<?php echo $baseUrl; ?>pages/patient_records.php" <?php echo isActive('patient_records.php', $activePage); ?>>Patient Records</a>
                         <a href="<?php echo $baseUrl; ?>pages/profile.php" <?php echo isActive('profile.php', $activePage); ?>>Profile</a>
                         <a href="<?php echo $baseUrl; ?>pages/feedback.php" <?php echo isActive('feedback.php', $activePage); ?>>Feedback</a>
                     <?php endif; ?>
@@ -48,10 +50,14 @@ function isActive($page, $activePage) {
                 <?php else: ?>
                     <!-- Guest Navigation -->
                     <a href="<?php echo $baseUrl; ?>pages/doctors.php" <?php echo isActive('doctors.php', $activePage); ?>>Find Doctors</a>
-                    <a href="<?php echo $baseUrl; ?>login.php" class="btn btn-primary">Login</a>
+                    <?php if($activePage == 'index.php'): ?>
+                        <a href="#" class="btn btn-primary login-trigger">Login</a>
+                    <?php else: ?>
+                        <a href="<?php echo $baseUrl; ?>login.php" class="btn btn-primary">Login</a>
+                    <?php endif; ?>
                     <a href="<?php echo $baseUrl; ?>register.php" class="btn btn-secondary">Register</a>
                 <?php endif; ?>
             </nav>
         </div>
     </div>
-</header> 
+</header>

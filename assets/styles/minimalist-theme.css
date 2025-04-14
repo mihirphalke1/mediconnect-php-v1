@@ -1,0 +1,168 @@
+/* 
+ * MediConnect Minimalist Theme
+ * A professional, clean design system for healthcare platforms
+ */
+
+/* Variables */
+:root {
+  /* Primary colors */
+  --primary-color: #2c6496;
+  --secondary-color: #3a7ca5;
+  --accent-color: #63a6d9;
+
+  /* Text colors */
+  --text-color: #333333;
+  --text-light: #6e7884;
+  --text-lighter: #8c97a6;
+
+  /* Background colors */
+  --bg-light: #f7f9fc;
+  --bg-white: #ffffff;
+
+  /* Border colors */
+  --border-color: #e0e5eb;
+
+  /* Status colors */
+  --success-color: #4caf50;
+  --warning-color: #ff9800;
+  --danger-color: #f44336;
+  --info-color: #2196f3;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 3px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 5px 15px rgba(0, 0, 0, 0.1);
+
+  /* Transitions */
+  --transition: all 0.25s ease;
+}
+
+/* Reset existing bright gradients */
+.primary-gradient,
+[class*="-gradient"],
+[style*="gradient"] {
+  background: none !important;
+  background-color: var(--primary-color) !important;
+}
+
+/* Reset gradient text */
+[style*="webkit-background-clip: text"],
+[style*="webkit-text-fill-color"] {
+  background: none !important;
+  -webkit-background-clip: none !important;
+  -webkit-text-fill-color: var(--text-color) !important;
+  background-clip: none !important;
+  color: var(--text-color) !important;
+}
+
+/* Base styles */
+body {
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: var(--bg-light);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Header Styles */
+header {
+  background-color: var(--bg-white);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--border-color);
+  width: 100%;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+/* Navigation Styles */
+nav {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+nav a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.35rem 0.75rem;
+  border-radius: 4px;
+  transition: var(--transition);
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+}
+
+nav a:hover,
+nav a.active {
+  color: var(--primary-color);
+  background-color: rgba(44, 100, 150, 0.05);
+}
+
+nav a.btn {
+  margin-left: 0.5rem;
+  padding: 0.35rem 1rem;
+  font-size: 0.875rem;
+  border-radius: 4px;
+}
+
+/* Logo Styles */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+}
+
+.logo i {
+  font-size: 1.25rem;
+  color: var(--primary-color);
+}
+
+.logo h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.35rem 1rem;
+  }
+
+  nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.35rem;
+    width: 100%;
+  }
+
+  nav a {
+    font-size: 0.8125rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  .logo h1 {
+    font-size: 1.125rem;
+  }
+}
+
+/* Include all the sections from above */
+/* ... */

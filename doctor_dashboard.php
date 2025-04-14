@@ -10,7 +10,7 @@ require_once 'includes/config.php';
 // Check if user is logged in as a doctor
 requireRole('doctor');
 
-// Handle appointment status updates
+// Handle appointment status updates (fallback for non-JS browsers)
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['update_status'])) {
     $appointment_id = filter_var($_POST['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
     $new_status = filter_var($_POST['status'], FILTER_SANITIZE_STRING);
@@ -123,6 +123,18 @@ $stmt = $conn->prepare("
 $stmt->execute([$_SESSION['user_id']]);
 $medical_records = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Fetch doctor's uploaded prescriptions
+$stmt = $conn->prepare("
+    SELECT p.*, u.full_name as patient_name 
+    FROM prescriptions p 
+    JOIN users u ON p.user_id = u.id 
+    WHERE p.doctor_id = ? 
+    ORDER BY p.uploaded_at DESC
+    LIMIT 10
+");
+$stmt->execute([$_SESSION['user_id']]);
+$prescriptions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
 // Fetch unread notifications
 $stmt = $conn->prepare("
     SELECT * FROM notifications 
@@ -145,16 +157,31 @@ $activePage = 'doctor_dashboard.php';
     <link rel="stylesheet" href="assets/styles/styles.css">
     <link rel="stylesheet" href="assets/styles/practo-enhanced.css">
     <link rel="stylesheet" href="assets/styles/profile.css">
+    <link rel="stylesheet" href="assets/styles/doctor.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
+<body class="doctor-dashboard">
     <?php include 'includes/header.php'; ?>
 
     <div class="container dashboard-container">
         <div class="welcome-section">
-            <h1>Welcome, Dr. <?php echo htmlspecialchars($_SESSION['full_name']); ?>!</h1>
-            <p>Manage your appointments and patient records here.</p>
+            <div class="doctor-profile-header">
+                <?php
+                // Get doctor's profile image
+                $stmt = $conn->prepare("SELECT profile_image FROM doctors WHERE id = ?");
+                $stmt->execute([$_SESSION['user_id']]);
+                $doctor = $stmt->fetch(PDO::FETCH_ASSOC);
+                $profile_image = $doctor['profile_image'] ?: 'assets/images/default-doctor.png';
+                ?>
+                <div class="doctor-image">
+                    <img src="<?php echo htmlspecialchars($profile_image); ?>" alt="Doctor Profile" class="profile-picture">
+                </div>
+                <div class="doctor-info">
+                    <h1>Welcome, Dr. <?php echo htmlspecialchars($_SESSION['full_name']); ?>!</h1>
+                    <p>Manage your appointments and patient records here.</p>
+                </div>
+            </div>
             
             <?php echo showFlashMessage(); ?>
         </div>
@@ -168,7 +195,7 @@ $activePage = 'doctor_dashboard.php';
             <div class="stat-card">
                 <i class="fas fa-user-clock"></i>
                 <h3>Pending Appointments</h3>
-                <p class="stat-number"><?php echo $pending_appointments; ?></p>
+                <p class="stat-number pending-count"><?php echo $pending_appointments; ?></p>
             </div>
             <div class="stat-card">
                 <i class="fas fa-users"></i>
@@ -187,6 +214,9 @@ $activePage = 'doctor_dashboard.php';
             <a href="doctor_upload.php" class="btn btn-primary">
                 <i class="fas fa-file-upload"></i> Upload Medical Records
             </a>
+            <a href="doctor_prescription.php" class="btn btn-success">
+                <i class="fas fa-prescription"></i> Upload Prescription
+            </a>
         </div>
 
         <div class="dashboard-grid">
@@ -194,12 +224,12 @@ $activePage = 'doctor_dashboard.php';
                 <div class="card-header">
                     <h3><i class="fas fa-calendar-check"></i> Appointments</h3>
                 </div>
-                <div class="card-content">
+                <div class="card-content appointments-container">
                     <?php if (empty($appointments)): ?>
                         <p class="no-data">No appointments scheduled.</p>
                     <?php else: ?>
                         <?php foreach ($appointments as $appointment): ?>
-                            <div class="appointment-item">
+                            <div class="appointment-item" data-appointment-id="<?php echo $appointment['id']; ?>">
                                 <div class="appointment-info">
                                     <h4><?php echo htmlspecialchars($appointment['patient_name']); ?></h4>
                                     <p>
@@ -228,6 +258,7 @@ $activePage = 'doctor_dashboard.php';
                                 </div>
                                 <div class="appointment-actions">
                                     <?php if ($appointment['status'] == 'pending'): ?>
+                                        <!-- Add direct form submission option -->
                                         <form method="POST" action="" class="status-form">
                                             <input type="hidden" name="appointment_id" value="<?php echo $appointment['id']; ?>">
                                             <div class="form-group">
@@ -242,9 +273,26 @@ $activePage = 'doctor_dashboard.php';
                                                 <button type="submit" name="status" value="cancelled" class="btn btn-danger">
                                                     <i class="fas fa-times"></i> Decline
                                                 </button>
+                                                <input type="hidden" name="update_status" value="1">
                                             </div>
-                                            <input type="hidden" name="update_status" value="1">
                                         </form>
+                                        
+                                        <!-- JavaScript-based buttons (hidden if JS is disabled) -->
+                                        <div class="js-only" style="display:none;">
+                                            <div class="form-group">
+                                                <label for="js-message-<?php echo $appointment['id']; ?>">Message to Patient:</label>
+                                                <textarea name="message" id="js-message-<?php echo $appointment['id']; ?>" 
+                                                        placeholder="Optional message for the patient"></textarea>
+                                            </div>
+                                            <div class="button-group">
+                                                <button type="button" data-id="<?php echo $appointment['id']; ?>" class="btn btn-success accept-appointment-btn">
+                                                    <i class="fas fa-check"></i> Accept
+                                                </button>
+                                                <button type="button" data-id="<?php echo $appointment['id']; ?>" class="btn btn-danger decline-appointment-btn">
+                                                    <i class="fas fa-times"></i> Decline
+                                                </button>
+                                            </div>
+                                        </div>
                                     <?php else: ?>
                                         <?php if ($appointment['doctor_message']): ?>
                                             <div class="doctor-message">
@@ -289,9 +337,42 @@ $activePage = 'doctor_dashboard.php';
                     <?php endif; ?>
                 </div>
             </div>
+            
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-prescription"></i> Prescriptions</h3>
+                    <a href="doctor_prescription.php" class="btn btn-sm btn-success">Upload New</a>
+                </div>
+                <div class="card-content">
+                    <?php if (empty($prescriptions)): ?>
+                        <p class="no-data">No prescriptions uploaded.</p>
+                    <?php else: ?>
+                        <?php foreach ($prescriptions as $prescription): ?>
+                            <div class="record-item">
+                                <div class="record-info">
+                                    <h4><?php echo htmlspecialchars($prescription['title']); ?></h4>
+                                    <p>Patient: <?php echo htmlspecialchars($prescription['patient_name']); ?></p>
+                                    <p>
+                                        <i class="fas fa-calendar"></i> 
+                                        <?php echo date('F j, Y', strtotime($prescription['uploaded_at'])); ?>
+                                    </p>
+                                </div>
+                                <a href="<?php echo htmlspecialchars($prescription['file_path']); ?>" 
+                                   class="btn btn-success btn-sm" 
+                                   target="_blank">
+                                    View
+                                </a>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+            </div>
         </div>
     </div>
 
     <?php include 'includes/footer.php'; ?>
+    
+    <!-- Include appointment management script -->
+    <script src="assets/js/appointment.js"></script>
 </body>
 </html> 

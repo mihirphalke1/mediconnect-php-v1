@@ -1,12 +1,11 @@
 <?php
-session_start();
-require_once '../config/database.php';
+/**
+ * Thank You Page
+ * Confirmation page displayed after various successful actions
+ */
 
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    header("Location: ../index.php");
-    exit();
-}
+// Include configuration
+require_once '../includes/config.php';
 
 // Get type from query parameter
 $type = isset($_GET['type']) ? $_GET['type'] : '';
@@ -19,14 +18,14 @@ switch ($type) {
     case 'appointment':
         $title = 'Appointment Booked Successfully';
         $message = 'Your appointment request has been submitted and is pending confirmation from the doctor. You will receive a notification once the doctor confirms or reschedules.';
-        $redirect_url = '../dashboard.php';
-        $redirect_text = 'View My Dashboard';
+        $redirect_url = isset($_SESSION['user_id']) ? ($_SESSION['user_type'] === 'user' ? '../dashboard.php' : '../doctor_dashboard.php') : '../index.php';
+        $redirect_text = isset($_SESSION['user_id']) ? 'View My Dashboard' : 'Back to Home';
         break;
     case 'feedback':
         $title = 'Feedback Submitted Successfully';
         $message = 'Thank you for your valuable feedback. We appreciate your input and will use it to improve our services.';
-        $redirect_url = '../dashboard.php';
-        $redirect_text = 'Back to Dashboard';
+        $redirect_url = isset($_SESSION['user_id']) ? ($_SESSION['user_type'] === 'user' ? '../dashboard.php' : '../doctor_dashboard.php') : '../index.php';
+        $redirect_text = isset($_SESSION['user_id']) ? 'Back to Dashboard' : 'Back to Home';
         break;
     default:
         $title = 'Operation Completed Successfully';
@@ -34,16 +33,21 @@ switch ($type) {
         $redirect_url = '../index.php';
         $redirect_text = 'Back to Home';
 }
+
+// Set navigation active page
+$activePage = 'thank_you.php';
+$isSubdirectory = true;
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Thank You - MediConnect</title>
+    <title>Thank You - <?php echo APP_NAME; ?></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/styles/styles.css">
     <link rel="stylesheet" href="../assets/styles/practo-enhanced.css">
     <link rel="stylesheet" href="../assets/styles/profile.css">
+    <link rel="stylesheet" href="../assets/styles/minimalist-theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -79,31 +83,7 @@ switch ($type) {
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="header-content">
-                <a href="../index.php" class="logo">
-                    <i class="fas fa-heartbeat"></i>
-                    <h1>MediConnect</h1>
-                </a>
-                <nav>
-                    <a href="../index.php">Home</a>
-                    <?php if($_SESSION['user_type'] == 'user'): ?>
-                        <a href="../dashboard.php">My Dashboard</a>
-                        <a href="doctors.php">Find Doctors</a>
-                        <a href="book_appointment.php">Book Appointment</a>
-                        <a href="../medical_records.php">Medical Records</a>
-                    <?php else: ?>
-                        <a href="../doctor_dashboard.php">Doctor Dashboard</a>
-                        <a href="appointments.php">My Appointments</a>
-                    <?php endif; ?>
-                    <a href="profile.php">Profile</a>
-                    <a href="feedback.php">Feedback</a>
-                    <a href="../logout.php" class="btn btn-secondary">Logout</a>
-                </nav>
-            </div>
-        </div>
-    </header>
+    <?php include '../includes/header.php'; ?>
 
     <div class="container">
         <div class="thank-you-container fade-in">
@@ -120,34 +100,6 @@ switch ($type) {
         </div>
     </div>
 
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Quick Links</h4>
-                    <a href="doctors.php">Find Doctors</a>
-                    <?php if($_SESSION['user_type'] == 'user'): ?>
-                        <a href="../dashboard.php">Dashboard</a>
-                    <?php else: ?>
-                        <a href="../doctor_dashboard.php">Dashboard</a>
-                    <?php endif; ?>
-                    <a href="feedback.php">Feedback</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Legal</h4>
-                    <a href="terms.php">Terms of Service</a>
-                    <a href="privacy.php">Privacy Policy</a>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact</h4>
-                    <p><i class="fas fa-envelope"></i> support@mediconnect.com</p>
-                    <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 MediConnect. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+    <?php include '../includes/footer.php'; ?>
 </body>
 </html>

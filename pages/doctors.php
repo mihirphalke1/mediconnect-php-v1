@@ -1,10 +1,15 @@
 <?php
-session_start();
-require_once '../config/database.php';
+/**
+ * Doctors Page
+ * Allows users to search for and view doctors
+ */
+
+// Include configuration
+require_once '../includes/config.php';
 
 // Get filter parameters
-$specialty = isset($_GET['specialty']) ? filter_var($_GET['specialty'], FILTER_SANITIZE_STRING) : '';
-$search = isset($_GET['search']) ? filter_var($_GET['search'], FILTER_SANITIZE_STRING) : '';
+$specialty = isset($_GET['specialty']) ? sanitizeInput($_GET['specialty']) : '';
+$search = isset($_GET['search']) ? sanitizeInput($_GET['search']) : '';
 
 // Build query based on filter parameters
 $query = "SELECT * FROM doctors WHERE 1=1";
@@ -34,16 +39,22 @@ $doctors = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $stmt = $conn->prepare("SELECT DISTINCT specialization FROM doctors ORDER BY specialization");
 $stmt->execute();
 $specializations = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+// Set variables for header
+$activePage = 'doctors.php';
+$isSubdirectory = true;
 ?>
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Find Doctors - MediConnect</title>
+<head>
+    <title>Find Doctors - <?php echo APP_NAME; ?></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/styles/styles.css">
     <link rel="stylesheet" href="../assets/styles/practo-enhanced.css">
     <link rel="stylesheet" href="../assets/styles/profile.css">
+    <link rel="stylesheet" href="../assets/styles/doctor.css">
+    <link rel="stylesheet" href="../assets/styles/minimalist-theme.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -146,39 +157,9 @@ $specializations = $stmt->fetchAll(PDO::FETCH_COLUMN);
             color: #718096;
         }
     </style>
-  </head>
-  <body>
-    <header>
-      <div class="container">
-        <div class="header-content">
-          <a href="../index.php" class="logo">
-            <i class="fas fa-heartbeat"></i>
-            <h1>MediConnect</h1>
-          </a>
-          <nav>
-            <a href="../index.php">Home</a>
-            <?php if(isset($_SESSION['user_id'])): ?>
-                <?php if($_SESSION['user_type'] == 'user'): ?>
-                    <a href="../dashboard.php">My Dashboard</a>
-                    <a href="doctors.php" class="active">Find Doctors</a>
-                    <a href="book_appointment.php">Book Appointment</a>
-                    <a href="../medical_records.php">Medical Records</a>
-                <?php else: ?>
-                    <a href="../doctor_dashboard.php">Doctor Dashboard</a>
-                    <a href="appointments.php">My Appointments</a>
-                <?php endif; ?>
-                <a href="profile.php">Profile</a>
-                <a href="feedback.php">Feedback</a>
-                <a href="../logout.php" class="btn btn-secondary">Logout</a>
-            <?php else: ?>
-                <a href="doctors.php" class="active">Find Doctors</a>
-                <a href="#" class="btn btn-primary login-trigger">Login</a>
-                <a href="../register.php" class="btn btn-secondary">Register</a>
-            <?php endif; ?>
-          </nav>
-        </div>
-      </div>
-    </header>
+</head>
+<body>
+    <?php include '../includes/header.php'; ?>
 
     <div class="container">
       <section class="profile-header-section fade-in">
@@ -196,107 +177,65 @@ $specializations = $stmt->fetchAll(PDO::FETCH_COLUMN);
         <form action="" method="GET" class="filter-form">
           <div class="form-group">
             <label for="specialty"><i class="fas fa-stethoscope"></i> Specialty</label>
-            <select id="specialty" name="specialty">
+            <select id="specialty" name="specialty" class="form-control">
               <option value="">All Specialties</option>
-              <?php foreach($specializations as $spec): ?>
-                <option value="<?php echo htmlspecialchars($spec); ?>" <?php echo ($specialty == $spec) ? 'selected' : ''; ?>>
-                    <?php echo htmlspecialchars($spec); ?>
+              <?php foreach ($specializations as $spec): ?>
+                <option value="<?php echo htmlspecialchars($spec); ?>" <?php if($specialty == $spec) echo 'selected'; ?>>
+                  <?php echo htmlspecialchars($spec); ?>
                 </option>
               <?php endforeach; ?>
             </select>
           </div>
-          
           <div class="form-group">
             <label for="search"><i class="fas fa-search"></i> Search</label>
-            <input type="text" id="search" name="search" placeholder="Search by name or location" value="<?php echo htmlspecialchars($search); ?>">
+            <input type="text" id="search" name="search" class="form-control" 
+                  placeholder="Search by name, specialty, or location"
+                  value="<?php echo htmlspecialchars($search); ?>">
           </div>
-          
-          <button type="submit" class="btn btn-primary">
-            <i class="fas fa-filter"></i> Filter Results
-          </button>
-          
-          <?php if(!empty($specialty) || !empty($search)): ?>
-            <a href="doctors.php" class="btn btn-secondary">
-              <i class="fas fa-undo"></i> Clear Filters
-            </a>
+          <button type="submit" class="btn btn-primary">Search</button>
+          <?php if(!empty($search) || !empty($specialty)): ?>
+            <a href="doctors.php" class="btn btn-secondary">Clear</a>
           <?php endif; ?>
         </form>
       </section>
 
-      <section class="doctor-list-section fade-in">
-        <?php if(empty($doctors)): ?>
-          <div class="no-results">
-            <i class="fas fa-user-md" style="font-size: 48px; color: #cbd5e0; display: block; margin-bottom: 20px;"></i>
-            <h3>No doctors found</h3>
-            <p>Try changing your search criteria or check back later.</p>
-          </div>
-        <?php else: ?>
-          <div class="doctor-list">
-            <?php foreach($doctors as $doctor): ?>
-              <div class="doctor-card">
-                <div class="doctor-header">
-                  <h3>Dr. <?php echo htmlspecialchars($doctor['full_name']); ?></h3>
-                  <div class="doctor-specialty"><?php echo htmlspecialchars($doctor['specialization']); ?></div>
-                </div>
-                <div class="doctor-info">
-                  <?php if($doctor['experience']): ?>
-                    <p><i class="fas fa-user-clock"></i> <?php echo htmlspecialchars($doctor['experience']); ?> years experience</p>
-                  <?php endif; ?>
-                  <?php if($doctor['phone']): ?>
-                    <p><i class="fas fa-phone"></i> <?php echo htmlspecialchars($doctor['phone']); ?></p>
-                  <?php endif; ?>
-                  <?php if($doctor['address']): ?>
-                    <p><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($doctor['address']); ?></p>
-                  <?php endif; ?>
-                </div>
-                <div class="doctor-actions">
-                  <?php if(isset($_SESSION['user_id']) && $_SESSION['user_type'] == 'user'): ?>
-                    <a href="book_appointment.php?doctor_id=<?php echo $doctor['id']; ?>" class="btn btn-primary">
-                      <i class="fas fa-calendar-plus"></i> Book Appointment
-                    </a>
-                  <?php else: ?>
-                    <a href="../index.php" class="btn btn-primary login-trigger">
-                      <i class="fas fa-sign-in-alt"></i> Login to Book
-                    </a>
-                  <?php endif; ?>
-                </div>
+      <?php if (empty($doctors)): ?>
+        <div class="no-results fade-in">
+          <i class="fas fa-user-md fa-4x"></i>
+          <h3>No doctors found</h3>
+          <p>Try adjusting your search criteria or clear the filters</p>
+        </div>
+      <?php else: ?>
+        <div class="doctor-list fade-in">
+          <?php foreach ($doctors as $doctor): ?>
+            <div class="doctor-card">
+              <div class="doctor-header">
+                <h3>Dr. <?php echo htmlspecialchars($doctor['full_name']); ?></h3>
+                <span class="doctor-specialty"><?php echo htmlspecialchars($doctor['specialization']); ?></span>
               </div>
-            <?php endforeach; ?>
-          </div>
-        <?php endif; ?>
-      </section>
+              <div class="doctor-info">
+                <p><i class="fas fa-graduation-cap"></i> Experience: <?php echo $doctor['experience']; ?> years</p>
+                <p><i class="fas fa-map-marker-alt"></i> <?php echo htmlspecialchars($doctor['address']); ?></p>
+                <p><i class="fas fa-phone"></i> <?php echo htmlspecialchars($doctor['phone']); ?></p>
+                <p><i class="fas fa-envelope"></i> <?php echo htmlspecialchars($doctor['email']); ?></p>
+              </div>
+              <div class="doctor-actions">
+                <?php if(isset($_SESSION['user_id']) && $_SESSION['user_type'] == 'user'): ?>
+                  <a href="book_appointment.php?doctor_id=<?php echo $doctor['id']; ?>" class="btn-primary">
+                    <i class="fas fa-calendar-plus"></i> Book Appointment
+                  </a>
+                <?php else: ?>
+                  <a href="../login.php" class="btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Login to Book
+                  </a>
+                <?php endif; ?>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      <?php endif; ?>
     </div>
 
-    <footer>
-      <div class="container">
-        <div class="footer-content">
-          <div class="footer-section">
-            <h4>Quick Links</h4>
-            <a href="../index.php">Home</a>
-            <a href="doctors.php">Find Doctors</a>
-            <?php if(isset($_SESSION['user_id'])): ?>
-                <?php if($_SESSION['user_type'] == 'user'): ?>
-                    <a href="../dashboard.php">Dashboard</a>
-                <?php else: ?>
-                    <a href="../doctor_dashboard.php">Dashboard</a>
-                <?php endif; ?>
-            <?php endif; ?>
-          </div>
-          <div class="footer-section">
-            <h4>Legal</h4>
-            <a href="terms.php">Terms of Service</a>
-            <a href="privacy.php">Privacy Policy</a>
-          </div>
-          <div class="footer-section">
-            <h4>Contact</h4>
-            <p><i class="fas fa-envelope"></i> support@mediconnect.com</p>
-            <p><i class="fas fa-phone"></i> +1 (555) 123-4567</p>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <p>&copy; 2024 MediConnect. All rights reserved.</p>
-        </div>
-      </div>
-    </footer>
-  </body>
+    <?php include '../includes/footer.php'; ?>
+</body>
 </html>

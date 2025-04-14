@@ -60,13 +60,15 @@ $stmt = $conn->prepare("
 $stmt->execute([$_SESSION['user_id']]);
 $pending_count = $stmt->fetchColumn();
 
-// Count medical records
-$stmt = $conn->prepare("
-    SELECT COUNT(*) FROM medical_records 
-    WHERE user_id = ?
-");
+// Fetch medical records count
+$stmt = $conn->prepare("SELECT COUNT(*) FROM medical_records WHERE user_id = ?");
 $stmt->execute([$_SESSION['user_id']]);
 $records_count = $stmt->fetchColumn();
+
+// Fetch prescriptions count
+$stmt = $conn->prepare("SELECT COUNT(*) FROM prescriptions WHERE user_id = ?");
+$stmt->execute([$_SESSION['user_id']]);
+$prescriptions_count = $stmt->fetchColumn();
 
 // Fetch unread notifications
 $stmt = $conn->prepare("
@@ -91,6 +93,7 @@ $medical_records = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Set active page for navigation
 $activePage = 'dashboard.php';
+$isSubdirectory = false;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -103,8 +106,42 @@ $activePage = 'dashboard.php';
     <link rel="stylesheet" href="assets/styles/profile.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/styles/minimalist-theme.css">
+    <style>
+        /* Animation for new notifications and status changes */
+        @keyframes highlight {
+            0% { background-color: rgba(255, 255, 0, 0.3); }
+            100% { background-color: transparent; }
+        }
+        
+        .highlight {
+            animation: highlight 2s ease-out;
+        }
+        
+        .appointment-item {
+            transition: all 0.3s ease;
+        }
+        
+        .status-confirmed {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+            border-color: #28a745;
+        }
+        
+        .status-cancelled {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+        
+        .status-pending {
+            background-color: rgba(255, 193, 7, 0.1);
+            color: #ffc107;
+            border-color: #ffc107;
+        }
+    </style>
 </head>
-<body>
+<body class="patient-dashboard">
     <?php include 'includes/header.php'; ?>
 
     <div class="container dashboard-container">
@@ -119,7 +156,7 @@ $activePage = 'dashboard.php';
             <div class="stat-card">
                 <i class="fas fa-calendar-check"></i>
                 <h3>Upcoming Appointments</h3>
-                <p class="stat-number"><?php echo $upcoming_count; ?></p>
+                <p class="stat-number upcoming-count"><?php echo $upcoming_count; ?></p>
             </div>
             <div class="stat-card">
                 <i class="fas fa-file-medical"></i>
@@ -129,7 +166,12 @@ $activePage = 'dashboard.php';
             <div class="stat-card">
                 <i class="fas fa-clock"></i>
                 <h3>Pending Appointments</h3>
-                <p class="stat-number"><?php echo $pending_count; ?></p>
+                <p class="stat-number pending-count"><?php echo $pending_count; ?></p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-prescription"></i>
+                <h3>Prescriptions</h3>
+                <p class="stat-number"><?php echo $prescriptions_count; ?></p>
             </div>
         </div>
 
@@ -139,6 +181,9 @@ $activePage = 'dashboard.php';
             </a>
             <a href="medical_records.php" class="btn btn-secondary">
                 <i class="fas fa-file-medical"></i> View Medical Records
+            </a>
+            <a href="prescriptions.php" class="btn btn-success">
+                <i class="fas fa-prescription"></i> View Prescriptions
             </a>
         </div>
 
@@ -168,12 +213,12 @@ $activePage = 'dashboard.php';
                     <h3><i class="fas fa-calendar-check"></i> Your Appointments</h3>
                     <a href="pages/book_appointment.php" class="btn btn-primary btn-sm">Book New</a>
                 </div>
-                <div class="card-content">
+                <div class="card-content appointments-container">
                     <?php if (empty($appointments)): ?>
                         <p class="no-data">No appointments scheduled. <a href="pages/book_appointment.php">Book your first appointment</a></p>
                     <?php else: ?>
                         <?php foreach ($appointments as $appointment): ?>
-                            <div class="appointment-item">
+                            <div class="appointment-item" data-appointment-id="<?php echo $appointment['id']; ?>">
                                 <div class="appointment-info">
                                     <h4>Dr. <?php echo htmlspecialchars($appointment['doctor_name']); ?></h4>
                                     <p><?php echo htmlspecialchars($appointment['specialization']); ?></p>
@@ -237,9 +282,58 @@ $activePage = 'dashboard.php';
                     <?php endif; ?>
                 </div>
             </div>
+            
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-prescription"></i> Recent Prescriptions</h3>
+                </div>
+                <div class="card-content">
+                    <?php 
+                    // Fetch a few recent prescriptions for dashboard display
+                    $stmt = $conn->prepare("
+                        SELECT p.*, d.full_name as doctor_name
+                        FROM prescriptions p
+                        JOIN doctors d ON p.doctor_id = d.id
+                        WHERE p.user_id = ?
+                        ORDER BY p.id DESC
+                        LIMIT 3
+                    ");
+                    $stmt->execute([$_SESSION['user_id']]);
+                    $recent_prescriptions = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    
+                    if (empty($recent_prescriptions)): 
+                    ?>
+                        <p class="no-data">No prescriptions available.</p>
+                    <?php else: ?>
+                        <?php foreach ($recent_prescriptions as $prescription): ?>
+                            <div class="record-item">
+                                <div class="record-info">
+                                    <h4><?php echo htmlspecialchars($prescription['title']); ?></h4>
+                                    <p>Dr. <?php echo htmlspecialchars($prescription['doctor_name']); ?></p>
+                                    <p>
+                                        <i class="fas fa-calendar"></i> 
+                                        <?php echo isset($prescription['uploaded_at']) ? date('F j, Y', strtotime($prescription['uploaded_at'])) : 'Date not available'; ?>
+                                    </p>
+                                </div>
+                                <a href="<?php echo htmlspecialchars($prescription['file_path']); ?>" 
+                                   class="btn btn-success btn-sm" 
+                                   target="_blank">
+                                    View
+                                </a>
+                            </div>
+                        <?php endforeach; ?>
+                        <div class="dashboard-footer">
+                            <a href="prescriptions.php" class="btn btn-link">View all prescriptions <i class="fas fa-arrow-right"></i></a>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
         </div>
     </div>
 
     <?php include 'includes/footer.php'; ?>
+    
+    <!-- Include appointment management script -->
+    <script src="assets/js/appointment.js"></script>
 </body>
-</html> 
+</html>

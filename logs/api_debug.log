@@ -1,0 +1,136 @@
+{"time":"2025-04-14 07:24:27","action":"update_status","method":"POST","user_id":2,"user_type":"doctor"}
+Entering updateAppointmentStatus function
+Request data: {"appointment_id":"2","status":"confirmed","message":""}
+Found appointment: {"id":2,"user_id":2,"doctor_id":2,"appointment_date":"2025-03-21","appointment_time":"11:18:00","status":"pending","notes":"hello doctor","created_at":"2025-03-21 09:18:44","updated_at":"2025-03-21 09:18:44","patient_name":"patient"}
+Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'doctor_message' in 'field list'
+{"time":"2025-04-14 07:24:28","action":"update_status","method":"POST","user_id":2,"user_type":"doctor"}
+Entering updateAppointmentStatus function
+Request data: {"appointment_id":"2","status":"confirmed","message":""}
+Found appointment: {"id":2,"user_id":2,"doctor_id":2,"appointment_date":"2025-03-21","appointment_time":"11:18:00","status":"pending","notes":"hello doctor","created_at":"2025-03-21 09:18:44","updated_at":"2025-03-21 09:18:44","patient_name":"patient"}
+Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'doctor_message' in 'field list'
+{"time":"2025-04-14 07:24:28","action":"update_status","method":"POST","user_id":2,"user_type":"doctor"}
+Entering updateAppointmentStatus function
+Request data: {"appointment_id":"2","status":"confirmed","message":""}
+Found appointment: {"id":2,"user_id":2,"doctor_id":2,"appointment_date":"2025-03-21","appointment_time":"11:18:00","status":"pending","notes":"hello doctor","created_at":"2025-03-21 09:18:44","updated_at":"2025-03-21 09:18:44","patient_name":"patient"}
+Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'doctor_message' in 'field list'
+{"time":"2025-04-14 07:24:28","action":"update_status","method":"POST","user_id":2,"user_type":"doctor"}
+Entering updateAppointmentStatus function
+Request data: {"appointment_id":"2","status":"confirmed","message":""}
+Found appointment: {"id":2,"user_id":2,"doctor_id":2,"appointment_date":"2025-03-21","appointment_time":"11:18:00","status":"pending","notes":"hello doctor","created_at":"2025-03-21 09:18:44","updated_at":"2025-03-21 09:18:44","patient_name":"patient"}
+Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'doctor_message' in 'field list'
+{"time":"2025-04-14 07:24:35","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:24:43","action":"update_status","method":"POST","user_id":2,"user_type":"doctor"}
+Entering updateAppointmentStatus function
+Request data: {"appointment_id":"2","status":"confirmed","message":""}
+Found appointment: {"id":2,"user_id":2,"doctor_id":2,"appointment_date":"2025-03-21","appointment_time":"11:18:00","status":"pending","notes":"hello doctor","created_at":"2025-03-21 09:18:44","updated_at":"2025-03-21 09:18:44","patient_name":"patient"}
+Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'doctor_message' in 'field list'
+{"time":"2025-04-14 07:24:50","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:25:00","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:25:10","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:25:20","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:25:30","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:25:40","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:25:50","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:26:01","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:26:11","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:26:21","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:26:31","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:26:41","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:26:51","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:27:01","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:27:11","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:27:22","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:27:33","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:27:44","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:27:55","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:28:08","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:28:18","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:28:28","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:28:38","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:28:48","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:28:51","action":"update_status","method":"POST","user_id":2,"user_type":"doctor"}
+Entering updateAppointmentStatus function
+Request data: {"appointment_id":"2","status":"confirmed","message":""}
+Found appointment: {"id":2,"user_id":2,"doctor_id":2,"appointment_date":"2025-03-21","appointment_time":"11:18:00","status":"pending","notes":"hello doctor","created_at":"2025-03-21 09:18:44","updated_at":"2025-03-21 09:18:44","patient_name":"patient"}
+Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'doctor_message' in 'field list'
+{"time":"2025-04-14 07:28:54","action":"update_status","method":"POST","user_id":2,"user_type":"doctor"}
+Entering updateAppointmentStatus function
+Request data: {"appointment_id":"2","status":"confirmed","message":""}
+Found appointment: {"id":2,"user_id":2,"doctor_id":2,"appointment_date":"2025-03-21","appointment_time":"11:18:00","status":"pending","notes":"hello doctor","created_at":"2025-03-21 09:18:44","updated_at":"2025-03-21 09:18:44","patient_name":"patient"}
+Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'doctor_message' in 'field list'
+{"time":"2025-04-14 07:29:03","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:29:13","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:33:33","action":"update_status","method":"POST","user_id":2,"user_type":"doctor"}
+Entering updateAppointmentStatus function
+Request data: {"appointment_id":"2","status":"confirmed","message":""}
+Found appointment: {"id":2,"user_id":2,"doctor_id":2,"appointment_date":"2025-03-21","appointment_time":"11:18:00","status":"pending","notes":"hello doctor","doctor_message":null,"created_at":"2025-03-21 09:18:44","updated_at":"2025-03-21 09:18:44","patient_name":"patient"}
+Created notification successfully
+Successfully updated appointment status to confirmed
+{"time":"2025-04-14 07:33:37","action":"update_status","method":"POST","user_id":2,"user_type":"doctor"}
+Entering updateAppointmentStatus function
+Request data: {"appointment_id":"2","status":"confirmed","message":""}
+Found appointment: {"id":2,"user_id":2,"doctor_id":2,"appointment_date":"2025-03-21","appointment_time":"11:18:00","status":"confirmed","notes":"hello doctor","doctor_message":"","created_at":"2025-03-21 09:18:44","updated_at":"2025-04-14 11:03:33","patient_name":"patient"}
+Created notification successfully
+Successfully updated appointment status to confirmed
+{"time":"2025-04-14 07:33:39","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 07:33:41","action":"update_status","method":"POST","user_id":2,"user_type":"doctor"}
+Entering updateAppointmentStatus function
+Request data: {"appointment_id":"2","status":"confirmed","message":""}
+Found appointment: {"id":2,"user_id":2,"doctor_id":2,"appointment_date":"2025-03-21","appointment_time":"11:18:00","status":"confirmed","notes":"hello doctor","doctor_message":"","created_at":"2025-03-21 09:18:44","updated_at":"2025-04-14 11:03:37","patient_name":"patient"}
+Created notification successfully
+Successfully updated appointment status to confirmed
+{"time":"2025-04-14 07:33:44","action":"update_status","method":"POST","user_id":2,"user_type":"doctor"}
+Entering updateAppointmentStatus function
+Request data: {"appointment_id":"2","status":"confirmed","message":""}
+Found appointment: {"id":2,"user_id":2,"doctor_id":2,"appointment_date":"2025-03-21","appointment_time":"11:18:00","status":"confirmed","notes":"hello doctor","doctor_message":"","created_at":"2025-03-21 09:18:44","updated_at":"2025-04-14 11:03:41","patient_name":"patient"}
+Created notification successfully
+Successfully updated appointment status to confirmed
+{"time":"2025-04-14 07:33:51","action":"update_status","method":"POST","user_id":2,"user_type":"doctor"}
+Entering updateAppointmentStatus function
+Request data: {"appointment_id":"12","status":"cancelled","message":""}
+Found appointment: {"id":12,"user_id":2,"doctor_id":2,"appointment_date":"2025-04-17","appointment_time":"10:00:00","status":"pending","notes":"aise hin","doctor_message":null,"created_at":"2025-04-14 10:47:39","updated_at":"2025-04-14 10:47:39","patient_name":"patient"}
+Created notification successfully
+Successfully updated appointment status to cancelled
+{"time":"2025-04-14 07:33:56","action":"update_status","method":"POST","user_id":2,"user_type":"doctor"}
+Entering updateAppointmentStatus function
+Request data: {"appointment_id":"8","status":"confirmed","message":""}
+Found appointment: {"id":8,"user_id":1,"doctor_id":2,"appointment_date":"2025-03-26","appointment_time":"15:00:00","status":"pending","notes":"s.kjdhfjkshfk,as","doctor_message":null,"created_at":"2025-03-21 10:42:14","updated_at":"2025-03-21 10:42:14","patient_name":"Mihir"}
+Created notification successfully
+Successfully updated appointment status to confirmed
+{"time":"2025-04-14 07:34:52","action":"get_patient_appointments","method":"GET","user_id":2,"user_type":"user"}
+{"time":"2025-04-14 07:35:02","action":"get_patient_appointments","method":"GET","user_id":2,"user_type":"user"}
+{"time":"2025-04-14 07:35:12","action":"get_patient_appointments","method":"GET","user_id":2,"user_type":"user"}
+{"time":"2025-04-14 07:35:22","action":"get_patient_appointments","method":"GET","user_id":2,"user_type":"user"}
+{"time":"2025-04-14 07:35:32","action":"get_patient_appointments","method":"GET","user_id":2,"user_type":"user"}
+{"time":"2025-04-14 07:35:42","action":"get_patient_appointments","method":"GET","user_id":2,"user_type":"user"}
+{"time":"2025-04-14 07:35:53","action":"get_patient_appointments","method":"GET","user_id":2,"user_type":"user"}
+{"time":"2025-04-14 07:36:03","action":"get_patient_appointments","method":"GET","user_id":2,"user_type":"user"}
+{"time":"2025-04-14 10:13:00","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 10:13:10","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 10:13:20","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 10:13:30","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 10:13:40","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 10:13:50","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 10:14:00","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 10:14:10","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 10:14:20","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 10:14:30","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 10:14:40","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 10:14:50","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 10:15:00","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 10:15:10","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 10:27:53","action":"update_status","method":"POST","user_id":2,"user_type":"doctor"}
+Entering updateAppointmentStatus function
+Request data: {"appointment_id":"13","status":"confirmed","message":"aajao"}
+Found appointment: {"id":13,"user_id":2,"doctor_id":2,"appointment_date":"2025-04-14","appointment_time":"14:00:00","status":"pending","notes":"aise hi milna hai mujhe","doctor_message":null,"created_at":"2025-04-14 13:57:11","updated_at":"2025-04-14 13:57:11","patient_name":"patient"}
+Created notification successfully
+Successfully updated appointment status to confirmed
+{"time":"2025-04-14 10:27:57","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 10:27:57","action":"update_status","method":"POST","user_id":2,"user_type":"doctor"}
+Entering updateAppointmentStatus function
+Request data: {"appointment_id":"13","status":"confirmed","message":"aajao"}
+Found appointment: {"id":13,"user_id":2,"doctor_id":2,"appointment_date":"2025-04-14","appointment_time":"14:00:00","status":"confirmed","notes":"aise hi milna hai mujhe","doctor_message":"aajao","created_at":"2025-04-14 13:57:11","updated_at":"2025-04-14 13:57:53","patient_name":"patient"}
+Created notification successfully
+Successfully updated appointment status to confirmed
+{"time":"2025-04-14 10:28:20","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}
+{"time":"2025-04-14 10:31:30","action":"get_appointments","method":"GET","user_id":2,"user_type":"doctor"}

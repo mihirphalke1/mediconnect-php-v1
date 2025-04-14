@@ -21,7 +21,8 @@ $baseUrl = $isRoot ? '' : '../';
                         <a href="<?php echo $baseUrl; ?>pages/book_appointment.php">Book Appointment</a>
                     <?php elseif($_SESSION['user_type'] === 'doctor'): ?>
                         <a href="<?php echo $baseUrl; ?>doctor_dashboard.php">Dashboard</a>
-                        <a href="<?php echo $baseUrl; ?>doctor_upload.php">Upload Records</a>
+                        <a href="<?php echo $baseUrl; ?>pages/appointments.php">My Appointments</a>
+                        <a href="<?php echo $baseUrl; ?>pages/patient_records.php">Patient Records</a>
                     <?php endif; ?>
                 <?php endif; ?>
                 
