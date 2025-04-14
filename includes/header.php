@@ -18,6 +18,12 @@ function isActive($page, $activePage) {
 }
 ?>
 <link rel="stylesheet" href="<?php echo $baseUrl; ?>assets/styles/minimalist-theme.css">
+<!-- Favicon -->
+<link rel="icon" href="<?php echo $baseUrl; ?>assets/images/favicon.ico" type="image/x-icon">
+<link rel="shortcut icon" href="<?php echo $baseUrl; ?>assets/images/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" sizes="180x180" href="<?php echo $baseUrl; ?>assets/images/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="<?php echo $baseUrl; ?>assets/images/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="<?php echo $baseUrl; ?>assets/images/favicon-16x16.png">
 <header>
     <div class="container">
         <div class="header-content">
